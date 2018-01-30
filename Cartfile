@@ -1,0 +1,2 @@
+github "EricssonBroadcastServices/iOSClientDownload" "master"
+github "EricssonBroadcastServices/iOSClientExposure" "Changes/architectureRefactoring"
