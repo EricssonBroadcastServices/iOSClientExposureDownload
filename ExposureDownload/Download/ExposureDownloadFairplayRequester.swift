@@ -67,13 +67,13 @@ internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequ
     
     func shouldContactRemote(for resourceLoadingRequest: AVAssetResourceLoadingRequest) throws -> Bool {
         guard resourceLoadingRequest.contentInformationRequest != nil else {
-            throw ExposureError.fairplay(reason: .contentInformationRequestMissing)
+            throw ExposureDownloadTask.Error.fairplay(reason: .contentInformationRequestMissing)
         }
         
         resourceLoadingRequest.contentInformationRequest?.contentType = AVStreamingKeyDeliveryPersistentContentKeyType
         
         guard let dataRequest = resourceLoadingRequest.dataRequest else {
-            throw ExposureError.fairplay(reason: .missingDataRequest)
+            throw ExposureDownloadTask.Error.fairplay(reason: .missingDataRequest)
         }
         
         // Check if we can handle the request with a previously persisted content key

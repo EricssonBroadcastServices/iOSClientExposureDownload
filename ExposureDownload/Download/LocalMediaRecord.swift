@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Exposure
 
 internal struct LocalMediaRecord: Codable {
     /// Id for the asset at `bookmarkURL`

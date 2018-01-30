@@ -70,7 +70,7 @@ public protocol ExposureDownloadAnalyticsProvider {
     ///
     /// - parameter ExposureDownloadTask: `ExposureDownloadTask` broadcasting the event
     /// - parameter error: `ExposureError` causing the event to fire
-    func downloadErrorEvent(task: ExposureDownloadTask, error: ExposureError)
+    func downloadErrorEvent(task: ExposureDownloadTask, error: ExposureDownloadTask.Error)
     
     /// Should prepare and configure the remaining parts of the Analytics environment.
     /// This step is required because we are dependant on the response from Exposure with regards to the playSessionId.

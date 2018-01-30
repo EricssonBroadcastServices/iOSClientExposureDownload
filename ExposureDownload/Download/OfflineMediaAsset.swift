@@ -9,6 +9,7 @@
 import Foundation
 import Download
 import AVFoundation
+import Exposure
 
 public struct OfflineMediaAsset {
     internal init(assetId: String, entitlement: PlaybackEntitlement?, url: URL?) {
