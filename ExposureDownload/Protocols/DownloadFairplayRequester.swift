@@ -8,10 +8,10 @@
 
 import Foundation
 import AVFoundation
-import Player
 import Alamofire
+import Exposure
 
-internal protocol ExposureFairplayRequester: class {
+internal protocol DownloadFairplayRequester: class {
     /// Entitlement related to this specific *Fairplay* request.
     var entitlement: PlaybackEntitlement { get }
     
@@ -33,7 +33,7 @@ internal protocol ExposureFairplayRequester: class {
     func shouldContactRemote(for resourceLoadingRequest: AVAssetResourceLoadingRequest) throws -> Bool
 }
 
-extension ExposureFairplayRequester {
+extension DownloadFairplayRequester {
     /// Starting point for the *Fairplay* validation chain. Note that returning `false` from this method does not automatically mean *Fairplay* validation failed.
     ///
     /// - parameter resourceLoadingRequest: loading request to handle
@@ -65,7 +65,7 @@ extension ExposureFairplayRequester {
     }
 }
 
-extension ExposureFairplayRequester {
+extension DownloadFairplayRequester {
     /// Handling a *Fairplay* validation request is a process in several parts:
     ///
     /// * Fetch and parse the *Application Certificate*
@@ -159,7 +159,7 @@ extension ExposureFairplayRequester {
 }
 
 // MARK: - Application Certificate
-extension ExposureFairplayRequester {
+extension DownloadFairplayRequester {
     /// The *Application Certificate* is fetched from a server specified by a `certificateUrl` delivered in the *entitlement* obtained through *Exposure*.
     ///
     /// - note: This method uses a specialized function for parsing the retrieved *Application Certificate* from an *MRR specific* format.
@@ -244,7 +244,7 @@ extension ExposureFairplayRequester {
 }
 
 // MARK: - Content Key Context
-extension ExposureFairplayRequester {
+extension DownloadFairplayRequester {
     /// Fetching a *Content Key Context*, `CKC`, requires a valid *Server Playback Context*.
     ///
     /// - note: This method uses a specialized function for parsing the retrieved *Content Key Context* from an *MRR specific* format.

@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import Download
+import Exposure
 
 public final class ExposureDownloadTask: TaskType {
     internal var entitlementRequest: ExposureRequest<PlaybackEntitlement>?
@@ -46,8 +47,8 @@ public final class ExposureDownloadTask: TaskType {
     
     // MARK: Entitlement
     internal var onEntitlementRequestStarted: (ExposureDownloadTask) -> Void = { _ in }
-    internal var onEntitlementResponse: (ExposureDownloadTask, PlaybackEntitlement) -> Void = { _ in }
-    internal var onEntitlementRequestCancelled: (ExposureDownloadTask) -> Void = { _ in }
+    internal var onEntitlementResponse: (ExposureDownloadTask, PlaybackEntitlement) -> Void = { _,_ in }
+    internal var onEntitlementRequestCancelled: (ExposureDownloadTask) -> Void = { _,_ in }
 }
 
 extension ExposureDownloadTask: DRMRequest { }

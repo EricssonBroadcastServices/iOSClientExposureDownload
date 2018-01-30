@@ -4,4 +4,22 @@
    <FileRef
       location = "group:ExposureDownload.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/iOSClientDownload/Download.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/iOSClientExposure/Exposure.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Alamofire/Alamofire.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Mockingjay/Mockingjay.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Quick/Quick.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Nimble/Nimble.xcodeproj">
+   </FileRef>
 </Workspace>

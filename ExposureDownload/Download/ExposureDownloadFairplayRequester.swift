@@ -9,12 +9,12 @@
 import Foundation
 import AVFoundation
 import Download
-import Player
+import Exposure
 
 /// *Exposure* specific implementation of the `OfflineFairplayRequester` protocol.
 ///
 /// This class handles any *Exposure* related `DRM` validation with regards to *Fairplay*. It is designed to be *plug-and-play* and should require no configuration to use.
-internal class ExposureDownloadFairplayRequester: NSObject, ExposureFairplayRequester, DownloadFairplayRequester, FairplayRequester {
+internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequester, FairplayRequester {
     
     init(entitlement: PlaybackEntitlement, assetId: String) {
         self.entitlement = entitlement
@@ -56,13 +56,7 @@ internal class ExposureDownloadFairplayRequester: NSObject, ExposureFairplayRequ
         // AVAssetResourceLoadingDataRequest, as well as any subsequent requests for the same key url.
         //
         // The value of AVAssetResourceLoadingContentInformationRequest.contentType must be set to AVStreamingKeyDeliveryPersistentContentKeyType when responding with data created with this method.
-        var error: NSError?
-        let persistedCKC = resourceLoadingRequest.persistentContentKey(fromKeyVendorResponse: ckc, options: nil, error: &error)
-        
-        guard error == nil else {
-            print("persistentContentKey",error!.localizedDescription)
-            throw error!
-        }
+        let persistedCKC = try resourceLoadingRequest.persistentContentKey(fromKeyVendorResponse: ckc, options: nil)
         
         let persistedKeyURL = try contentKeyUrl(for: assetId)
         print("onSuccessfulRetrieval CKC",assetId,persistedKeyURL)

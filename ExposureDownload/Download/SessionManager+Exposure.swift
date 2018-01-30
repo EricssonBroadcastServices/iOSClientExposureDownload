@@ -8,6 +8,7 @@
 
 import Foundation
 import Download
+import Exposure
 
 extension SessionManager where T == ExposureDownloadTask {
     /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
