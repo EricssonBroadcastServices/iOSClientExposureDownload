@@ -8,14 +8,10 @@
 
 import Foundation
 import Download
+import Exposure
 
 extension ExposureDownloadTask: HeartbeatsProvider {
-    internal struct DownloadHeartbeatData: HeartbeatData {
-        let timestamp: Int64
-        let payload: [String: Any]
-    }
-    
-    public func requestHeatbeat() -> HeartbeatData {
-        return DownloadHeartbeatData(timestamp: Date().millisecondsSince1970, payload: [:])
+    public func requestHeatbeat() -> AnalyticsEvent {
+        return Playback.Heartbeat(timestamp: Date().millisecondsSince1970)
     }
 }

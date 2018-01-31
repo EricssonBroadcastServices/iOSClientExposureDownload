@@ -13,6 +13,23 @@ import Exposure
 extension SessionManager where T == ExposureDownloadTask {
     /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
     ///
+    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlement` response.
+    ///
+    /// A relevant `ExposureAnalytics` object will be created.
+    ///
+    /// - parameter assetId: A unique identifier for the asset
+    /// - parameter sessionToken: Token identifying the active session
+    /// - parameter environment: Exposure environment used for the active session
+    /// - returns: `ExposureDownloadTask`
+    public func download(assetId: String, using sessionToken: SessionToken, in environment: Environment) -> T {
+        let provider = ExposureAnalytics(environment: environment, sessionToken: sessionToken)
+        return download(assetId: assetId, analyticProvider: provider)
+    }
+}
+
+extension SessionManager where T == ExposureDownloadTask {
+    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
+    ///
     ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
     ///
     /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlement` response.
