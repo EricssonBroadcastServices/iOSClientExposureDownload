@@ -88,7 +88,7 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
     public func onEntitlementRequested(tech: ExposureDownloadTask, assetId: String) {
         /// 1. Created
         let created = Playback.Created(timestamp: Date().millisecondsSince1970,
-                                       version: version(for: "com.emp.Analytics"),
+                                       version: version(for: "com.emp.ExposureDownload"),
                                        revision: version(for: "com.emp.Download"),
                                        assetId: assetId,
                                        autoPlay: false)
