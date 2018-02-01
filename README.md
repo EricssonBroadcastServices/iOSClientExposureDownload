@@ -1,6 +1,6 @@
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-# Exposure
+# Exposure Download
 
 * [Features](#features)
 * [License](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/LICENSE)
@@ -16,16 +16,9 @@
 * [Contributing](#contributing)
 
 ## Features
-- [x] Asset search
-- [x] Authentication
-- [x] Playback Entitlement requests
-- [x] Download Entitlement requests
-- [x] EPG discovery
-- [x] Analytics drop-off
-- [x] Server time sync
-- [x] Carousel integration
-- [x] Dynamic customer configuration
-- [x] Content search with autocompletion
+
+- [x] Download through *Exposure*
+- [x] Analytics Provider
 
 ## Requirements
 
