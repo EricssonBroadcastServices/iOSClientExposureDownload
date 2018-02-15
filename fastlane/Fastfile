@@ -79,7 +79,7 @@ platform :ios do
     # Private lanes
     
     desc "Runs all the tests"
-    private lane :run_unit_tests do
+    private_lane :run_unit_tests do
         scan(
              workspace: ENV["UNIT_TEST_WORKSPACE"],
              scheme: ENV["UNIT_TEST_SCHEME"]
@@ -102,7 +102,7 @@ platform :ios do
         update_dependency_graph()
     end
     
-    private lane :fix_dependencies do
+    private_lane :fix_dependencies do
         version = "v" + get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
         cartfile = File.expand_path("..",Dir.pwd) + "/Cartfile"
         UI.message(cartfile)
