@@ -48,7 +48,6 @@
 		76A89D3B2020A27700C23579 /* Mockingjay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D402020A27700C23579 /* Mockingjay.framework */; };
 		76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D412020A27700C23579 /* Nimble.framework */; };
 		76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D422020A27700C23579 /* Quick.framework */; };
-		76A89D432020A2BF00C23579 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D442020A2BF00C23579 /* Alamofire.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,7 +113,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76A89D432020A2BF00C23579 /* Alamofire.framework in Frameworks */,
 				76A89D352020A26800C23579 /* Download.framework in Frameworks */,
 				76A89D362020A26800C23579 /* Exposure.framework in Frameworks */,
 			);
