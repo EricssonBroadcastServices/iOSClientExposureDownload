@@ -186,7 +186,7 @@ public final class ExposureDownloadTask: TaskType {
     public let eventPublishTransmitter = Download.EventPublishTransmitter<ExposureDownloadTask>()
     public var analyticsProvider: ExposureDownloadAnalyticsProvider
     
-    public let sessionManager: SessionManager<ExposureDownloadTask>
+    public let sessionManager: Download.SessionManager<ExposureDownloadTask>
     
     
     
@@ -194,7 +194,7 @@ public final class ExposureDownloadTask: TaskType {
         return Download.TaskDelegate(task: self)
     }()
     
-    internal init(assetId: String, sessionManager: SessionManager<ExposureDownloadTask>, analyticsProvider: ExposureDownloadAnalyticsProvider) {
+    internal init(assetId: String, sessionManager: Download.SessionManager<ExposureDownloadTask>, analyticsProvider: ExposureDownloadAnalyticsProvider) {
         self.configuration = Configuration(identifier: assetId)
         self.responseData = ResponseData()
         

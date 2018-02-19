@@ -10,7 +10,7 @@ import Foundation
 import Download
 import Exposure
 
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
     ///
     /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlement` response.
@@ -27,7 +27,7 @@ extension SessionManager where T == ExposureDownloadTask {
     }
 }
 
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
     ///
     ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
@@ -53,7 +53,7 @@ extension SessionManager where T == ExposureDownloadTask {
 }
 
 // MARK: - OfflineMediaAsset
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     public func offline(assetId: String) -> OfflineMediaAsset? {
         return offlineAssets()
             .filter{ $0.assetId == assetId }
@@ -107,7 +107,7 @@ extension SessionManager where T == ExposureDownloadTask {
 }
 
 // MARK: - LocalMediaRecord
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     fileprivate var localMediaRecords: [LocalMediaRecord]? {
         do {
             let logFile = try logFileURL()
@@ -152,7 +152,7 @@ extension SessionManager where T == ExposureDownloadTask {
 }
 
 // MARK: Directory
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     fileprivate var localMediaRecordsFile: String {
         return "localMediaRecords"
     }
@@ -174,7 +174,7 @@ extension SessionManager where T == ExposureDownloadTask {
 }
 
 // MARK: Save / Remove
-extension SessionManager where T == ExposureDownloadTask {
+extension Download.SessionManager where T == ExposureDownloadTask {
     
     /// This method will ensure `LocalMediaLog` has a unique list of downloads with respect to `assetId`
     fileprivate func save(localRecord: LocalMediaRecord) {

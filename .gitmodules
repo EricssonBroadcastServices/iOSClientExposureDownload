@@ -1,6 +1,3 @@
-[submodule "Carthage/Checkouts/Alamofire"]
-	path = Carthage/Checkouts/Alamofire
-	url = ssh://git@github.com/Alamofire/Alamofire.git
 [submodule "Carthage/Checkouts/iOSClientDownload"]
 	path = Carthage/Checkouts/iOSClientDownload
 	url = ssh://git@github.com/EricssonBroadcastServices/iOSClientDownload.git
