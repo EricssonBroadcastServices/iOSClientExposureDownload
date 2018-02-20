@@ -1,5 +1,5 @@
 github "EricssonBroadcastServices/iOSClientDownload" "855761d02c30670b9a304b8614b2f6689bf5cea4"
-github "EricssonBroadcastServices/iOSClientExposure" "a432814291479beaed55ddd370d3fdd51b465cdf"
+github "EricssonBroadcastServices/iOSClientExposure" "85e3791979ea6aa5d601b6d73e92561805f955a1"
 github "FredrikSjoberg/Mockingjay" "2.0.3"
 github "Quick/Nimble" "v7.0.1"
 github "Quick/Quick" "v1.1.0"
