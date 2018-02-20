@@ -114,7 +114,7 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
         startup = .notStarted(events: current)
     }
 
-    public func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: HeartbeatsProvider) {
+    public func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: @escaping () -> AnalyticsEvent?) {
         let events = startupEvents
 
         dispatcher = Dispatcher(environment: environment,

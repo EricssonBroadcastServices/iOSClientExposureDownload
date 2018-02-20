@@ -28,7 +28,6 @@
 		76A89CBF202082E400C23579 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 76A89CBB202082E400C23579 /* README.md */; };
 		76A89CC0202082E400C23579 /* UPGRADE_GUIDE.md in Resources */ = {isa = PBXBuildFile; fileRef = 76A89CBC202082E400C23579 /* UPGRADE_GUIDE.md */; };
 		76A89CCE2020846000C23579 /* ExposureDownloadFairplayRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89CC32020845F00C23579 /* ExposureDownloadFairplayRequester.swift */; };
-		76A89CCF2020846000C23579 /* ExposureDownloadTask+HeartbeatsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89CC42020845F00C23579 /* ExposureDownloadTask+HeartbeatsProvider.swift */; };
 		76A89CD02020846000C23579 /* ExposureDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89CC52020845F00C23579 /* ExposureDownloadTask.swift */; };
 		76A89CD12020846000C23579 /* LocalMediaRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89CC62020845F00C23579 /* LocalMediaRecord.swift */; };
 		76A89CD22020846000C23579 /* OfflineMediaAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89CC72020845F00C23579 /* OfflineMediaAsset.swift */; };
@@ -85,7 +84,6 @@
 		76A89CBB202082E400C23579 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		76A89CBC202082E400C23579 /* UPGRADE_GUIDE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = UPGRADE_GUIDE.md; sourceTree = SOURCE_ROOT; };
 		76A89CC32020845F00C23579 /* ExposureDownloadFairplayRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureDownloadFairplayRequester.swift; sourceTree = "<group>"; };
-		76A89CC42020845F00C23579 /* ExposureDownloadTask+HeartbeatsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ExposureDownloadTask+HeartbeatsProvider.swift"; sourceTree = "<group>"; };
 		76A89CC52020845F00C23579 /* ExposureDownloadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureDownloadTask.swift; sourceTree = "<group>"; };
 		76A89CC62020845F00C23579 /* LocalMediaRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalMediaRecord.swift; sourceTree = "<group>"; };
 		76A89CC72020845F00C23579 /* OfflineMediaAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineMediaAsset.swift; sourceTree = "<group>"; };
@@ -213,7 +211,6 @@
 			isa = PBXGroup;
 			children = (
 				76A89CC32020845F00C23579 /* ExposureDownloadFairplayRequester.swift */,
-				76A89CC42020845F00C23579 /* ExposureDownloadTask+HeartbeatsProvider.swift */,
 				76A89CC52020845F00C23579 /* ExposureDownloadTask.swift */,
 				76A89CC62020845F00C23579 /* LocalMediaRecord.swift */,
 				76A89CC72020845F00C23579 /* OfflineMediaAsset.swift */,
@@ -397,7 +394,6 @@
 				765B4F902021E41D00610D5F /* DeviceInfo.swift in Sources */,
 				76A89CD32020846000C23579 /* SessionManager+Exposure.swift in Sources */,
 				765B4F932021E41D00610D5F /* DownloadPaused.swift in Sources */,
-				76A89CCF2020846000C23579 /* ExposureDownloadTask+HeartbeatsProvider.swift in Sources */,
 				765B4F962021E41D00610D5F /* DownloadStopped.swift in Sources */,
 				76A89CD22020846000C23579 /* OfflineMediaAsset.swift in Sources */,
 				76A89CD12020846000C23579 /* LocalMediaRecord.swift in Sources */,

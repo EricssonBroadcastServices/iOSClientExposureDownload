@@ -301,7 +301,9 @@ extension ExposureDownloadTask {
                 }
                 
                 weakSelf.analyticsProvider.onHandshakeStarted(tech: weakSelf, source: entitlement, assetId: assetId)
-                weakSelf.analyticsProvider.finalizePreparation(assetId: assetId, with: entitlement, heartbeatsProvider: weakSelf)
+                weakSelf.analyticsProvider.finalizePreparation(assetId: assetId, with: entitlement) {
+                    return Playback.Heartbeat(timestamp: Date().millisecondsSince1970)
+                }
                 
                 
                 weakSelf.entitlementRequest = nil

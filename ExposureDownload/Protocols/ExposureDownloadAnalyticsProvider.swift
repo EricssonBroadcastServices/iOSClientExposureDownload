@@ -80,5 +80,5 @@ public protocol ExposureDownloadAnalyticsProvider {
     /// - parameter asset: *EMP* asset identifiers.
     /// - parameter entitlement: The entitlement this session concerns
     /// - parameter heartbeatsProvider: Will deliver heartbeats metadata during the session
-    func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: HeartbeatsProvider)
+    func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: @escaping () -> AnalyticsEvent?)
 }
