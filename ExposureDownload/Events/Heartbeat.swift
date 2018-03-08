@@ -20,6 +20,11 @@ extension Playback {
             self.timestamp = timestamp
         }
     }
+    
+    /// There is no need to store Heartbeats on dispatch failure
+    internal var storeOnDispatchFailure: Bool {
+        return false
+    }
 }
 
 extension Playback.Heartbeat {
