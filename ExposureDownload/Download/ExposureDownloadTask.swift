@@ -26,9 +26,20 @@ extension ExposureDownloadTask {
 extension ExposureDownloadTask.Error {
     public var message: String {
         switch self {
-        case .taskError(reason: let error): return "Task: " + error.message
-        case .fairplay(reason: let reason): return "Fairplay: " + reason.message
-        case .exposure(reason: let error): return "Exposure: " + error.message
+        case .taskError(reason: let error): return error.message
+        case .fairplay(reason: let reason): return reason.message
+        case .exposure(reason: let error): return error.message
+        }
+    }
+}
+
+extension ExposureDownloadTask.Error {
+    /// Returns detailed information about the error
+    public var info: String? {
+        switch self {
+        case .taskError(reason: let error): return error.info
+        case .fairplay(reason: let reason): return reason.info
+        case .exposure(reason: let error): return error.info
         }
     }
 }
@@ -41,6 +52,10 @@ extension ExposureDownloadTask.Error {
         case .exposure(reason: let error): return error.code
         }
     }
+}
+
+extension ExposureDownloadTask.Error {
+    public var domain: String { return String(describing: type(of: self))+"Domain" }
 }
 
 extension ExposureDownloadTask.Error {
@@ -124,6 +139,34 @@ extension ExposureDownloadTask.Error.FairplayError {
     public var message: String {
         switch self {
         // Application Certificate
+        case .missingApplicationCertificateUrl: return "MISSING_APPLICATION_CERTIFICATE_URL"
+        case .networking(error: _): return "FAIRPLAY_NETWORKING_ERROR"
+        case .applicationCertificateDataFormatInvalid: return "APPLICATION_CERTIFICATE_DATA_FORMAT_INVALID"
+        case .applicationCertificateServer(code: _, message: _): return "APPLICATION_CERTIFICATE_SERVER_ERROR"
+        case .applicationCertificateParsing: return "APPLICATION_CERTIFICATE_PARSING_ERROR"
+        case .invalidContentIdentifier: return "INVALID_CONTENT_IDENTIFIER"
+            
+        // Server Playback Context
+        case .serverPlaybackContext(error: _): return "SERVER_PLAYBACK_CONTEXT_ERROR"
+            
+        // Content Key Context
+        case .missingContentKeyContextUrl: return "MISSING_CONTENT_KEY_CONTEXT_URL"
+        case .missingPlaytoken: return "MISSING_PLAYTOKEN"
+        case .contentKeyContextDataFormatInvalid: return "CONTENT_KEY_CONTEXT_DATA_FORMAT_INVALID"
+        case .contentKeyContextServer(code: _, message: _): return "CONTENT_KEY_CONTEXT_SERVER_ERROR"
+        case .contentKeyContextParsing: return "CONTENT_KEY_CONTEXT_PARSING_ERROR"
+        case .missingContentKeyContext: return "MISSING_CONTENT_KEY_CONTEXT"
+        case .missingDataRequest: return "MISSING_DATA_REQUEST"
+        case .contentInformationRequestMissing: return "CONTENT_INFORMATION_REQUEST_MISSING"
+        }
+    }
+}
+
+extension ExposureDownloadTask.Error.FairplayError {
+    /// Returns detailed information about the error
+    public var info: String? {
+        switch self {
+        // Application Certificate
         case .missingApplicationCertificateUrl: return "Application Certificate Url not found"
         case .networking(error: let error): return "Network error while fetching Application Certificate: \(error.localizedDescription)"
         case .applicationCertificateDataFormatInvalid: return "Certificate Data was not encodable using base64"
@@ -146,8 +189,6 @@ extension ExposureDownloadTask.Error.FairplayError {
         }
     }
 }
-
-
 
 extension ExposureDownloadTask.Error.FairplayError {
     /// Defines the `domain` specific code for the underlying error.

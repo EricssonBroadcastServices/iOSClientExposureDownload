@@ -182,7 +182,9 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
     public func downloadErrorEvent(task: ExposureDownloadTask, error: ExposureDownloadTask.Error) {
         let event = Playback.Error(timestamp: Date().millisecondsSince1970,
                                    message: error.message,
-                                   code: error.code)
+                                   code: error.code,
+                                   domain: error.domain,
+                                   info: error.info)
         dispatcher?.enqueue(event: event)
     }
 }
