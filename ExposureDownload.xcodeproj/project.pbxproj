@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		760800382064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760800362064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift */; };
+		760800392064E8F6007F59D5 /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760800372064E8F6007F59D5 /* SWXMLHash.swift */; };
 		765B4F6C2021E3BB00610D5F /* ExposureAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 765B4F6B2021E3BB00610D5F /* ExposureAnalytics.swift */; };
 		765B4F8F2021E41D00610D5F /* Created.swift in Sources */ = {isa = PBXBuildFile; fileRef = 765B4F742021E41D00610D5F /* Created.swift */; };
 		765B4F902021E41D00610D5F /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 765B4F752021E41D00610D5F /* DeviceInfo.swift */; };
@@ -60,6 +62,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		760800362064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SWXMLHash+TypeConversion.swift"; sourceTree = "<group>"; };
+		760800372064E8F6007F59D5 /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
 		765B4F6B2021E3BB00610D5F /* ExposureAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureAnalytics.swift; sourceTree = "<group>"; };
 		765B4F742021E41D00610D5F /* Created.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Created.swift; sourceTree = "<group>"; };
 		765B4F752021E41D00610D5F /* DeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
@@ -132,6 +136,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		760800342064E8F6007F59D5 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				760800352064E8F6007F59D5 /* SWXMLHash */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		760800352064E8F6007F59D5 /* SWXMLHash */ = {
+			isa = PBXGroup;
+			children = (
+				760800362064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift */,
+				760800372064E8F6007F59D5 /* SWXMLHash.swift */,
+			);
+			path = SWXMLHash;
+			sourceTree = "<group>";
+		};
 		765B4F6A2021E3BB00610D5F /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +211,7 @@
 				76A89CD82020847100C23579 /* Cartfile.private */,
 				76A89CA2202082A700C23579 /* ExposureDownload.h */,
 				76A89CA3202082A700C23579 /* Info.plist */,
+				760800342064E8F6007F59D5 /* Dependencies */,
 				765B4F6A2021E3BB00610D5F /* Services */,
 				765B4F6D2021E41D00610D5F /* Events */,
 				76A89CC12020845F00C23579 /* Download */,
@@ -395,12 +417,14 @@
 				76A89CD32020846000C23579 /* SessionManager+Exposure.swift in Sources */,
 				765B4F932021E41D00610D5F /* DownloadPaused.swift in Sources */,
 				765B4F962021E41D00610D5F /* DownloadStopped.swift in Sources */,
+				760800392064E8F6007F59D5 /* SWXMLHash.swift in Sources */,
 				76A89CD22020846000C23579 /* OfflineMediaAsset.swift in Sources */,
 				76A89CD12020846000C23579 /* LocalMediaRecord.swift in Sources */,
 				765B4F912021E41D00610D5F /* DownloadCancelled.swift in Sources */,
 				76A89CD02020846000C23579 /* ExposureDownloadTask.swift in Sources */,
 				765B4F6C2021E3BB00610D5F /* ExposureAnalytics.swift in Sources */,
 				765B4F972021E41D00610D5F /* Error.swift in Sources */,
+				760800382064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift in Sources */,
 				765B4F942021E41D00610D5F /* DownloadResumed.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
