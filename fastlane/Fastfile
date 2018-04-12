@@ -124,9 +124,9 @@ platform :ios do
                 File.open(cartfile, 'r') do |file|
                     file.each_line do |line|
                         if line.include? "EricssonBroadcastServices/iOSClientExposure"
-                            temp_file.puts line.gsub('"master"',"== "+exposureVersion)
+                            temp_file.puts line.gsub('"master"',">= "+exposureVersion)
                         elsif line.include? "EricssonBroadcastServices/iOSClientDownload"
-                            temp_file.puts line.gsub('"master"',"== "+downloadVersion)
+                            temp_file.puts line.gsub('"master"',">= "+downloadVersion)
                         else
                             temp_file.puts line
                         end
