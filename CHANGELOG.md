@@ -1,9 +1,15 @@
 # CHANGELOG
 
+* `0.93.0` Release - [0.93.0](#0930)
 * `0.80.0` Release - [0.80.0](#0800)
 * `0.79.0` Release - [0.79.0](#0790)
 * `0.78.0` Release - [0.78.0](#0780)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+## 0.93.0
+
+#### Changes
+* submodules no longer added through ssh
 
 ## 0.80.0
 
