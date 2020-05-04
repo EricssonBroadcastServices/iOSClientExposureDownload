@@ -46,7 +46,6 @@
 		76A89D362020A26800C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D382020A26800C23579 /* Exposure.framework */; };
 		76A89D392020A27700C23579 /* Download.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3E2020A27700C23579 /* Download.framework */; };
 		76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3F2020A27700C23579 /* Exposure.framework */; };
-		76A89D3B2020A27700C23579 /* Mockingjay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D402020A27700C23579 /* Mockingjay.framework */; };
 		76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D412020A27700C23579 /* Nimble.framework */; };
 		76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D422020A27700C23579 /* Quick.framework */; };
 /* End PBXBuildFile section */
@@ -125,7 +124,6 @@
 			files = (
 				76A89D392020A27700C23579 /* Download.framework in Frameworks */,
 				76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */,
-				76A89D3B2020A27700C23579 /* Mockingjay.framework in Frameworks */,
 				76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */,
 				76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */,
 				76A89CA9202082A700C23579 /* ExposureDownload.framework in Frameworks */,
@@ -501,6 +499,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -553,6 +552,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -576,7 +576,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownload;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -598,7 +598,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownload;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -613,7 +613,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownloadTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -628,7 +628,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownloadTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
