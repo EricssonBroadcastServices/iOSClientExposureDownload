@@ -11,9 +11,9 @@ import Download
 import Exposure
 
 extension Download.SessionManager where T == ExposureDownloadTask {
-    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
+    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
     ///
-    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlement` response.
+    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
     ///
     /// A relevant `ExposureAnalytics` object will be created.
     ///
@@ -28,11 +28,11 @@ extension Download.SessionManager where T == ExposureDownloadTask {
 }
 
 extension Download.SessionManager where T == ExposureDownloadTask {
-    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlement` supplied through exposure.
+    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
     ///
     ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
     ///
-    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlement` response.
+    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
     ///
     /// - parameter assetId: A unique identifier for the asset
     /// - parameter analyticsProvider: The specified analytics provider.
@@ -84,7 +84,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         delete(media: media)
     }
     
-    internal func save(assetId: String, entitlement: PlaybackEntitlement?, url: URL?) {
+    internal func save(assetId: String, entitlement: PlayBackEntitlementV2?, url: URL?) {
         do {
             if let currentAsset = offline(assetId: assetId) {
                 if currentAsset.urlAsset?.url != nil {

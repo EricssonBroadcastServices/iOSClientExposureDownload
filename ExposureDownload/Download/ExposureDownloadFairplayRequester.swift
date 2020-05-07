@@ -16,7 +16,7 @@ import Exposure
 /// This class handles any *Exposure* related `DRM` validation with regards to *Fairplay*. It is designed to be *plug-and-play* and should require no configuration to use.
 internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequester, FairplayRequester {
     
-    init(entitlement: PlaybackEntitlement, assetId: String) {
+    init(entitlement: PlayBackEntitlementV2, assetId: String) {
         self.entitlement = entitlement
         self.assetId = assetId
     }
@@ -43,7 +43,7 @@ internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequ
     //    The EXT-X-SESSION-KEY tag is optional.
     
     internal let assetId: String
-    internal let entitlement: PlaybackEntitlement
+    internal let entitlement: PlayBackEntitlementV2
     internal let resourceLoadingRequestQueue = DispatchQueue(label: "com.emp.exposure.offline.fairplay.requests")
     internal let customScheme = "skd"
     internal let resourceLoadingRequestOptions: [String : AnyObject]? = [AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey: true as AnyObject]

@@ -12,7 +12,7 @@ import Exposure
 
 internal protocol DownloadFairplayRequester: class {
     /// Entitlement related to this specific *Fairplay* request.
-    var entitlement: PlaybackEntitlement { get }
+    var entitlement: PlayBackEntitlementV2 { get }
     
     /// The DispatchQueue to use for AVAssetResourceLoaderDelegate callbacks.
     var resourceLoadingRequestQueue: DispatchQueue { get }
@@ -194,7 +194,7 @@ extension DownloadFairplayRequester {
     
     /// Retrieve the `certificateUrl` by parsing the *entitlement*.
     fileprivate var certificateUrl: URL? {
-        guard let urlString = entitlement.fairplay?.certificateUrl else { return nil }
+        guard let urlString = entitlement.formats?.first?.fairplay.first?.certificateUrl else { return nil }
         return URL(string: urlString)
     }
     
@@ -295,7 +295,7 @@ extension DownloadFairplayRequester {
     
     /// Retrieve the `licenseUrl` by parsing the *entitlement*.
     fileprivate var licenseUrl: URL? {
-        guard let urlString = entitlement.fairplay?.licenseAcquisitionUrl else { return nil }
+        guard let urlString = entitlement.formats?.first?.fairplay.first?.licenseAcquisitionUrl else { return nil }
         return URL(string: urlString)
     }
     

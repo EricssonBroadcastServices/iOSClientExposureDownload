@@ -215,10 +215,10 @@ extension ExposureDownloadTask.Error.FairplayError {
 
 public final class ExposureDownloadTask: TaskType {
     
-    internal var entitlementRequest: ExposureRequest<PlaybackEntitlement>?
+    internal var entitlementRequest: ExposureRequest<PlayBackEntitlementV2>?
     
     /// The `PlaybackEntitlement` granted for this download request.
-    fileprivate(set) public var entitlement: PlaybackEntitlement?
+    fileprivate(set) public var entitlement: PlayBackEntitlementV2?
     
     internal(set) public var task: AVAssetDownloadTask?
     public var configuration: Configuration
@@ -250,7 +250,7 @@ public final class ExposureDownloadTask: TaskType {
     
     // MARK: Entitlement
     internal var onEntitlementRequestStarted: (ExposureDownloadTask) -> Void = { _ in }
-    internal var onEntitlementResponse: (ExposureDownloadTask, PlaybackEntitlement) -> Void = { _,_ in }
+    internal var onEntitlementResponse: (ExposureDownloadTask, PlayBackEntitlementV2) -> Void = { _,_ in }
     internal var onEntitlementRequestCancelled: (ExposureDownloadTask) -> Void = { _ in }
 }
 
@@ -281,10 +281,10 @@ extension ExposureDownloadTask {
         }
     }
     
-    fileprivate func restoreOrCreate(for entitlement: PlaybackEntitlement, forceNew: Bool, callback: @escaping () -> Void = { }) {
+    fileprivate func restoreOrCreate(for entitlement: PlayBackEntitlementV2, forceNew: Bool, callback: @escaping () -> Void = { }) {
         fairplayRequester = ExposureDownloadFairplayRequester(entitlement: entitlement, assetId: configuration.identifier)
         
-        configuration.url = entitlement.mediaLocator
+        configuration.url = entitlement.formats?.first?.mediaLocator
         
         sessionManager.restoreTask(with: configuration.identifier) { [weak self] restoredTask in
             guard let weakSelf = self else { return }
@@ -505,7 +505,7 @@ extension ExposureDownloadTask {
     }
     
     @discardableResult
-    public func onEntitlementResponse(callback: @escaping (ExposureDownloadTask, PlaybackEntitlement) -> Void) -> ExposureDownloadTask {
+    public func onEntitlementResponse(callback: @escaping (ExposureDownloadTask, PlayBackEntitlementV2) -> Void) -> ExposureDownloadTask {
         onEntitlementResponse = callback
         return self
     }

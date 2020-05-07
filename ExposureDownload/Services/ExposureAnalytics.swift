@@ -103,10 +103,10 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
         startup = .notStarted(events: current)
     }
 
-    public func onHandshakeStarted(tech: ExposureDownloadTask, source: PlaybackEntitlement, assetId: String) {
+    public func onHandshakeStarted(tech: ExposureDownloadTask, source: PlayBackEntitlementV2, assetId: String) {
         let event = Playback.HandshakeStarted(timestamp: Date().millisecondsSince1970,
                                               assetId: assetId,
-                                              mediaId: source.mediaLocator.path)
+                                              mediaId: source.formats?.first?.mediaLocator.path)
 
         /// 3. Store startup events
         var current = startupEvents
@@ -114,7 +114,7 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
         startup = .notStarted(events: current)
     }
 
-    public func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: @escaping () -> AnalyticsEvent?) {
+    public func finalizePreparation(assetId: String, with entitlement: PlayBackEntitlementV2, heartbeatsProvider: @escaping () -> AnalyticsEvent?) {
         let events = startupEvents
 
         dispatcher = Dispatcher(environment: environment,
