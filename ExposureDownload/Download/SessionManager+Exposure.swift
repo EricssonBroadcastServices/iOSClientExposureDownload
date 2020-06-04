@@ -11,7 +11,8 @@ import Download
 import Exposure
 
 extension Download.SessionManager where T == ExposureDownloadTask {
-    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
+    
+    /* /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
     ///
     /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
     ///
@@ -25,10 +26,20 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         let provider = ExposureAnalytics(environment: environment, sessionToken: sessionToken)
         return download(assetId: assetId, analyticProvider: provider)
     }
+    */
+    public func download(assetId: String, using sessionToken: SessionToken, in environment: Environment) -> T {
+        return download(assetId: assetId, sessionToken: sessionToken, environment: environment)
+    }
+    
 }
 
 extension Download.SessionManager where T == ExposureDownloadTask {
-    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
+    
+    
+    /*
+        Remove passing analyticsProvider temporary
+     
+     /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
     ///
     ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
     ///
@@ -50,6 +61,35 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         }
         
     }
+     */
+    
+    
+    /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
+    ///
+    ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
+    ///
+    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
+    ///
+    /// - Parameters:
+    ///   - assetId: assetId: A unique identifier for the asset
+    ///   - sessionToken: user session token
+    ///   - environment: customer enviornment
+    /// - Returns: ExposureDownloadTask
+    public func download(assetId: String, sessionToken: SessionToken, environment: Environment ) -> T {
+        if let currentTask = delegate[assetId] {
+            print("♻️ Retrieved ExposureDownloadTask associated with request for: \(assetId)")
+            return currentTask
+        }
+        else {
+            print("✅ Created new ExposureDownloadTask for: \(assetId)")
+            return ExposureDownloadTask(assetId: assetId,
+                                        sessionManager: self,
+                                        sessionToken: sessionToken,
+                                        environment: environment)
+        }
+        
+    }
+
 }
 
 // MARK: - OfflineMediaAsset
