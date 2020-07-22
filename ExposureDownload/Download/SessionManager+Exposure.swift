@@ -13,20 +13,20 @@ import Exposure
 extension Download.SessionManager where T == ExposureDownloadTask {
     
     /* /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
-    ///
-    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
-    ///
-    /// A relevant `ExposureAnalytics` object will be created.
-    ///
-    /// - parameter assetId: A unique identifier for the asset
-    /// - parameter sessionToken: Token identifying the active session
-    /// - parameter environment: Exposure environment used for the active session
-    /// - returns: `ExposureDownloadTask`
-    public func download(assetId: String, using sessionToken: SessionToken, in environment: Environment) -> T {
-        let provider = ExposureAnalytics(environment: environment, sessionToken: sessionToken)
-        return download(assetId: assetId, analyticProvider: provider)
-    }
-    */
+     ///
+     /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
+     ///
+     /// A relevant `ExposureAnalytics` object will be created.
+     ///
+     /// - parameter assetId: A unique identifier for the asset
+     /// - parameter sessionToken: Token identifying the active session
+     /// - parameter environment: Exposure environment used for the active session
+     /// - returns: `ExposureDownloadTask`
+     public func download(assetId: String, using sessionToken: SessionToken, in environment: Environment) -> T {
+     let provider = ExposureAnalytics(environment: environment, sessionToken: sessionToken)
+     return download(assetId: assetId, analyticProvider: provider)
+     }
+     */
     public func download(assetId: String, using sessionToken: SessionToken, in environment: Environment) -> T {
         return download(assetId: assetId, sessionToken: sessionToken, environment: environment)
     }
@@ -37,30 +37,30 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     
     
     /*
-        Remove passing analyticsProvider temporary
+     Remove passing analyticsProvider temporary
      
      /// Create an `ExposureDownloadTask` by requesting a `PlaybackEntitlementV2` supplied through exposure.
-    ///
-    ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
-    ///
-    /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
-    ///
-    /// - parameter assetId: A unique identifier for the asset
-    /// - parameter analyticsProvider: The specified analytics provider.
-    /// - returns: `ExposureDownloadTask`
-    public func download(assetId: String, analyticProvider: ExposureDownloadAnalyticsProvider) -> T {
-        if let currentTask = delegate[assetId] {
-            print("♻️ Retrieved ExposureDownloadTask associated with request for: \(assetId)")
-            return currentTask
-        }
-        else {
-            print("✅ Created new ExposureDownloadTask for: \(assetId)")
-            return ExposureDownloadTask(assetId: assetId,
-                                        sessionManager: self,
-                                        analyticsProvider: analyticProvider)
-        }
-        
-    }
+     ///
+     ///  Entitlement requests will be done by using the `Environment` and `SessionToken` associated with `analyticsProvider`
+     ///
+     /// If the requested content is *FairPlay* protected, the appropriate `DownloadExposureFairplayRequester` will be created. Configuration will be taken from the `PlaybackEntitlementV2` response.
+     ///
+     /// - parameter assetId: A unique identifier for the asset
+     /// - parameter analyticsProvider: The specified analytics provider.
+     /// - returns: `ExposureDownloadTask`
+     public func download(assetId: String, analyticProvider: ExposureDownloadAnalyticsProvider) -> T {
+     if let currentTask = delegate[assetId] {
+     print("♻️ Retrieved ExposureDownloadTask associated with request for: \(assetId)")
+     return currentTask
+     }
+     else {
+     print("✅ Created new ExposureDownloadTask for: \(assetId)")
+     return ExposureDownloadTask(assetId: assetId,
+     sessionManager: self,
+     analyticsProvider: analyticProvider)
+     }
+     
+     }
      */
     
     
@@ -89,18 +89,18 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         }
         
     }
-
+    
 }
 
 // MARK: - OfflineMediaAsset
 extension Download.SessionManager where T == ExposureDownloadTask {
     public func offline(assetId: String) -> OfflineMediaAsset? {
-        return offlineAssets()
+        return getDownloadedAssets()
             .filter{ $0.assetId == assetId }
             .first
     }
     
-    public func offlineAssets() -> [OfflineMediaAsset] {
+    public func getDownloadedAssets() -> [OfflineMediaAsset] {
         guard let localMedia = localMediaRecords else { return [] }
         return localMedia.map{ resolve(mediaRecord: $0) }
     }
@@ -119,7 +119,10 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         }
     }
     
-    public func delete(assetId: String) {
+    
+    /// Delete a downloaded asset
+    /// - Parameter assetId: assetId
+    public func removeDownloadedAsset(assetId: String) {
         guard let media = offline(assetId: assetId) else { return }
         delete(media: media)
     }
@@ -178,9 +181,9 @@ extension Download.SessionManager where T == ExposureDownloadTask {
             let url = try URL(resolvingBookmarkData: urlBookmark, bookmarkDataIsStale: &bookmarkDataIsStale)
             
             /* guard let url = try URL(resolvingBookmarkData: urlBookmark, bookmarkDataIsStale: &bookmarkDataIsStale) else {
-                return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
-                
-            } */
+             return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
+             
+             } */
             
             guard !bookmarkDataIsStale else {
                 return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
@@ -248,5 +251,91 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         /// Update and save new log
         let newLog = localMedia.filter{ $0.assetId != localRecordId }
         save(mediaLog: newLog)
+    }
+}
+
+
+
+// MARK: - Download Info
+extension Download.SessionManager where T == ExposureDownloadTask {
+    
+    /* If you find downloadBlocked = true it means that download is not allowed. If the value is "downloadBlocked": false or not present at all it means that download is allowed.
+     */
+    
+    /// Check if the Asset is available to download
+    /// - Parameters:
+    ///   - assetId: assetId
+    ///   - environment: enviornment
+    ///   - availabilityKeys: availabilityKeys associated with the user
+    ///   - completionHandler: completion
+    public func isAvailableToDownload( assetId: String, environment: Environment, availabilityKeys: [String], _ completionHandler: @escaping (Bool) -> Void) {
+        FetchAssetById(environment: environment, assetId: assetId)
+            .request()
+            .validate()
+            .response{
+                if let asset = $0.value, let publications = asset.publications {
+                    
+                    print("PUBLICATIONS " , publications )
+                    
+                    // Check if the any publications have the right.downloadBlocked == false or not available
+                    let publicationsWithDownloadNotBlocked = publications.filter { $0.rights?.downloadBlocked == false || $0.rights == nil }
+                    
+                    print("publicationsWithDownloadNotBlocked ", publicationsWithDownloadNotBlocked )
+                    
+                    if publicationsWithDownloadNotBlocked.count == 0 { completionHandler(false) }
+                    
+                    else {
+                        
+                        // Check if the publications are within the NOW time range ( publications FromDate <= CurrentTIME <= toDate )
+                        let publicationsWithinNowTimeRange = publicationsWithDownloadNotBlocked.filter { ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 && Date().millisecondsSince1970 <= ($0.toDate)?.toDate()?.millisecondsSince1970 ?? 0 }
+                        
+                        print("publicationsWithinNowTimeRange " , publicationsWithinNowTimeRange )
+                        
+                        if publicationsWithinNowTimeRange.count == 0 { completionHandler(false)  }
+                        
+                        else {
+                            
+                            // Check if the products in the publications are matched with user availabilityKeys
+                            let publicationsMatchedWithUserAvailabilityKeys = publicationsWithinNowTimeRange.filter ({ publication in
+                                if let products = publication.products {
+                                    let keys =  Set(products).intersection(availabilityKeys)
+                                    return !keys.isEmpty
+                                } else { return false }
+                            })
+                            
+                            if publicationsMatchedWithUserAvailabilityKeys.count == 0 { completionHandler(false )}
+                            else { completionHandler(true) }
+                            
+                        }
+                    }
+
+                } else {
+                    
+                    // If the asset is empty or publications of the asset is Empty, Asset is not allowed to download
+                    print("Error ", $0.error)
+                    completionHandler(false)
+                }
+        }
+    }
+    
+    
+    /// Get downloadable info of an Asset
+    /// - Parameters:
+    ///   - assetId: assetId
+    ///   - environment: Exposure Enviornment
+    ///   - sessionToken: user sessionToken
+    ///   - completionHandler: completion
+    public func getDownloadableInfo(assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (DownloadInfo?) -> Void) {
+        GetDownloadableInfo(assetId: assetId, environment: environment, sessionToken: sessionToken)
+            .request()
+            .validate()
+            .response { info in
+                if let downloadInfo = info.value {
+                    completionHandler(downloadInfo)
+                    
+                } else {
+                    completionHandler(nil)
+                }
+        }
     }
 }

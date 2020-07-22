@@ -48,6 +48,7 @@
 		76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3F2020A27700C23579 /* Exposure.framework */; };
 		76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D412020A27700C23579 /* Nimble.framework */; };
 		76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D422020A27700C23579 /* Quick.framework */; };
+		783C8DDD24C819E00053A429 /* EnigmaDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C8DDC24C819E00053A429 /* EnigmaDownload.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,7 @@
 		76A89D402020A27700C23579 /* Mockingjay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Mockingjay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D412020A27700C23579 /* Nimble.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nimble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D422020A27700C23579 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		783C8DDC24C819E00053A429 /* EnigmaDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnigmaDownload.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				765B4F6B2021E3BB00610D5F /* ExposureAnalytics.swift */,
+				783C8DDC24C819E00053A429 /* EnigmaDownload.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 				765B4F922021E41D00610D5F /* DownloadCompleted.swift in Sources */,
 				765B4FA52021E75700610D5F /* Playback.swift in Sources */,
 				765B4F982021E41D00610D5F /* HandshakeStarted.swift in Sources */,
+				783C8DDD24C819E00053A429 /* EnigmaDownload.swift in Sources */,
 				765B4F902021E41D00610D5F /* DeviceInfo.swift in Sources */,
 				76A89CD32020846000C23579 /* SessionManager+Exposure.swift in Sources */,
 				765B4F932021E41D00610D5F /* DownloadPaused.swift in Sources */,
