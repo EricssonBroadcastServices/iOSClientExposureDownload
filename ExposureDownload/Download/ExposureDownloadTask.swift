@@ -353,7 +353,7 @@ extension ExposureDownloadTask {
     @discardableResult
     public func prepare(lazily: Bool = true) -> ExposureDownloadTask {
         guard let task = task else {
-            if let currentAsset = sessionManager.offline(assetId: configuration.identifier) {
+            if let currentAsset = sessionManager.getDownloadedAsset(assetId: configuration.identifier) {
                 prepareFrom(offlineMediaAsset: currentAsset, lazily: lazily) {
                     
                 }

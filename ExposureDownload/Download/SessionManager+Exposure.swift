@@ -94,7 +94,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
 
 // MARK: - OfflineMediaAsset
 extension Download.SessionManager where T == ExposureDownloadTask {
-    public func offline(assetId: String) -> OfflineMediaAsset? {
+    public func getDownloadedAsset(assetId: String) -> OfflineMediaAsset? {
         return getDownloadedAssets()
             .filter{ $0.assetId == assetId }
             .first
@@ -123,13 +123,13 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     /// Delete a downloaded asset
     /// - Parameter assetId: assetId
     public func removeDownloadedAsset(assetId: String) {
-        guard let media = offline(assetId: assetId) else { return }
+        guard let media = getDownloadedAsset(assetId: assetId) else { return }
         delete(media: media)
     }
     
     internal func save(assetId: String, entitlement: PlayBackEntitlementV2?, url: URL?) {
         do {
-            if let currentAsset = offline(assetId: assetId) {
+            if let currentAsset = getDownloadedAsset(assetId: assetId) {
                 if currentAsset.urlAsset?.url != nil {
                     print("⚠️ There is another record for an offline asset with id: \(assetId). This data will be overwritten. The location of any downloaded media or content keys will be lost!")
                     print(" x  ",currentAsset.urlAsset?.url)

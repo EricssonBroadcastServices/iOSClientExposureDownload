@@ -57,11 +57,8 @@ internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequ
         //
         // The value of AVAssetResourceLoadingContentInformationRequest.contentType must be set to AVStreamingKeyDeliveryPersistentContentKeyType when responding with data created with this method.
         let persistedCKC = try resourceLoadingRequest.persistentContentKey(fromKeyVendorResponse: ckc, options: nil)
-        
         let persistedKeyURL = try contentKeyUrl(for: assetId)
-        print("onSuccessfulRetrieval CKC",assetId,persistedKeyURL)
-        try persistedCKC.write(to: persistedKeyURL)
-        
+        try persistedCKC.write(to: persistedKeyURL, options: Data.WritingOptions.atomicWrite)
         return persistedCKC
     }
     
@@ -119,7 +116,7 @@ extension ExposureDownloadFairplayRequester {
 }
 extension ExposureDownloadFairplayRequester {
     internal func contentKeyDirectory() throws -> URL {
-        return try FileManager
+        let contentKeyDirectory =  try FileManager
             .default
             .url(for: .documentDirectory,
                  in: .userDomainMask,
@@ -129,6 +126,18 @@ extension ExposureDownloadFairplayRequester {
             .appendingPathComponent("exposure")
             .appendingPathComponent("offlineMedia")
             .appendingPathComponent("keys", isDirectory: true)
+        
+        if !FileManager.default.fileExists(atPath: contentKeyDirectory.path, isDirectory: nil) {
+            do {
+                try FileManager.default.createDirectory(at: contentKeyDirectory,
+                                                    withIntermediateDirectories: false,
+                                                    attributes: nil)
+            } catch {
+                fatalError("Unable to create directory for content keys at path: \(contentKeyDirectory.path)")
+            }
+        }
+        
+        return contentKeyDirectory
     }
     
     internal func contentKeyUrl(for assetId: String) throws -> URL {

@@ -159,7 +159,7 @@ To download an `Asset` client applications can create a `downloadTask` by passin
 Client applications can get an `offlineMediaAsset` ( downloaded asset ) by using the `EnigmaDownloadManager`. 
 
 ```Swift
-    let downloadedAsset = enigmaDownloadManager.offline(assetId: assetId)
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
 ```
 
 Or client applications can get `AllDownloadedAssets` by using `getDownloadedAssets()`
@@ -172,7 +172,7 @@ Or client applications can get `AllDownloadedAssets` by using `getDownloadedAsse
 Then developers can create a  `OfflineMediaPlayable` & pass it to the player to play any downloaded asset. 
 
 ```Swift
-    let downloadedAsset = enigmaDownloadManager.offline(assetId: assetId)
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
     
     if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset {
     
@@ -196,7 +196,8 @@ To delete a downloaded asset, developer can use `removeDownloadedAsset(assetId:)
 
 ### Fairplay Integration
 
-### Error Handling
+SDK provides an out of the box implementation for downloading FairPlay protected assets. Client applications can create a `downloadTask` & start downloading. SDK will download the relevent FairPlay licences & keys and will use them when you are trying to play a FairPlay protected downloaded asset using  [`ExposurePlayBack`]
+
 
 ## Release Notes
 Release specific changes can be found in the [CHANGELOG](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/CHANGELOG.md).
