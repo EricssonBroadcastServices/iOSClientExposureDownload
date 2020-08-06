@@ -14,7 +14,7 @@ internal struct LocalMediaRecord: Codable {
     internal let assetId: String
     
     /// Related entitlement
-    internal let entitlement: PlaybackEntitlement?
+    internal let entitlement: PlayBackEntitlementV2?
     
     /// URL encoded as bookmark data
     internal let urlBookmark: Data?
@@ -23,7 +23,7 @@ internal struct LocalMediaRecord: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         assetId = try container.decode(String.self, forKey: .assetId)
-        entitlement = try container.decodeIfPresent(PlaybackEntitlement.self, forKey: .entitlement)
+        entitlement = try container.decodeIfPresent(PlayBackEntitlementV2.self, forKey: .entitlement)
         urlBookmark = try container.decodeIfPresent(Data.self, forKey: .urlBookmark)
     }
     
@@ -35,7 +35,7 @@ internal struct LocalMediaRecord: Codable {
         try container.encodeIfPresent(urlBookmark, forKey: .urlBookmark)
     }
     
-    internal init(assetId: String, entitlement: PlaybackEntitlement?, completedAt location: URL?) throws {
+    internal init(assetId: String, entitlement: PlayBackEntitlementV2?, completedAt location: URL?) throws {
         self.assetId = assetId
         self.entitlement = entitlement
         self.urlBookmark = try location?.bookmarkData()

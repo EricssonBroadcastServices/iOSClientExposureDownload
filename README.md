@@ -6,8 +6,12 @@
 * [License](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/LICENSE)
 * [Requirements](#requirements)
 * [Installation](#installation)
+
 * Usage
     - [Downloading Assets](#downloading-assets)
+    - [Identify Downloadable Assets](#identify-downloadable-assets)
+    - [Playback of a downloaded Asset](#playback-of-a-downloaded-asset)
+    - [Deleting downloaded Asset](#deleting-downloaded-asset)
     - [Fairplay Integration](#fairplay-integration)
     - [Error Handling](#error-handling)
 * [Release Notes](#release-notes)
@@ -18,13 +22,13 @@
 ## Features
 
 - [x] Download through *Exposure*
-- [x] Analytics Provider
+- [x] Playback of Downloaded Assets
 
 ## Requirements
 
-* `iOS` 9.0+
-* `Swift` 4.0+
-* `Xcode` 9.0+
+* `iOS` 11.0+
+* `Swift` 4.2+
+* `Xcode` 10.0+
 
 * Framework dependencies
     - [`Download`](https://github.com/EricssonBroadcastServices/iOSClientDownload)
@@ -55,11 +59,145 @@ Finally, make sure you add the `.framework`s to your targets *General -> Embedde
 
 ## Usage
 
+Client applications can use the `ExpoureDownload` by  confirming `EnigmaDownloadManager` to any class 
+
+```Swift
+class MyTestViewController: UIViewController, EnigmaDownloadManager {
+    // After confirming client applications can use `enigmaDownloadManager` instance to perform any download related tasks.
+}
+```
+
+### Identify Downloadable Assets
+
+All assets might not be downloadable even if a customer supports download. There can be restriction of blocking downloads for a specific user.
+`ExposureDownload` provides an API (`isAvailableToDownload()`) to check if an `Asset` is available to download. But developers have to fetch `UserAvailabilityKeys` to pass , if they haven't already fetch those keys. 
+
+`Exposure`  provides an API to get the availability keys related the currently logged in user.
+
+```Swift
+ GetAvailabilityKeys(environment: environment, sessionToken: session)
+    .request()
+    .validate()
+    .response { 
+        // Handle Response 
+    }
+```
+
+Then client applications can perform the download check by passing the `assetId` & the `UserAvailabilityKeys`. 
+
+
+```Swift
+    enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, availabilityKeys: availabilityKeys ) { _ in 
+        // Handle Response ( true / false )
+}
+```
+
+### Identify what can be downloaded for a specific asset
+
+When a user select an actually downloadable asset `ExposureDownload` provides an option to check what can be downloadable for that asset. ( `audios` , `videos` , `subtitles` )
+```Swift
+    enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session) { downloadInfo in
+        /// Handle Response 
+        /// downloadInfo.audios , downloadInfo.videos,  downloadInfo.subtitles
+    }
+```
+
 ### Downloading Assets
+
+To download an `Asset` client applications can create a `downloadTask` by passing the `assetId` .   Task can be `prepare` & `resume` to start downloading the asset.
+`task.suspend()` will temporary suspend the downloading task. Suspended task can be `resume`.  
+`task.cancel()`  will cancel the task. 
+
+```Swift
+    let task = enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
+    task.prepare()
+    task.resume()
+    task.suspend()
+    task.cancel()
+    
+```
+
+`downloadTask` publishes several events that the client applications can listen to. 
+
+```Swift 
+
+    task.onPrepared { _ in
+        print("📱 Media Download prepared ")
+        // task.resume()
+    }
+    .onCanceled { task, url in
+        print("📱 Media Download canceled",task.configuration.identifier,url)
+    }
+    
+    .onSuspended { _ in
+        print("📱 Media Download Suspended")
+    }
+    .onResumed { _ in
+        print("📱 Media Download Resumed")
+        
+    }
+    .onProgress { _, progress in
+        print("📱 Percent", progress.current*100,"%")
+    }
+    .onShouldDownloadMediaOption{ _,_ in
+        print("📱 Select media option")
+    }
+    .onDownloadingMediaOption{ _,_ in
+        print("📱 Downloading media option")
+    }
+    .onError {_, url, error in
+        print("📱 Download error: \(error)")
+    }
+    .onCompleted { _, url in
+        print("📱 Download completed: \(url)")
+    }
+```
+
+
+### Playback of a downloaded Asset
+
+Client applications can get an `offlineMediaAsset` ( downloaded asset ) by using the `EnigmaDownloadManager`. 
+
+```Swift
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+```
+
+Or client applications can get `AllDownloadedAssets` by using `getDownloadedAssets()`
+
+```Swift
+    let allDownloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+```
+
+
+Then developers can create a  `OfflineMediaPlayable` & pass it to the player to play any downloaded asset. 
+
+```Swift
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+    
+    if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset {
+    
+        let offlineMediaPlayable = OfflineMediaPlayable(assetId: assetId, entitlement: entitlement, url: urlAsset.url)
+        
+        // Play downloaded asset
+        player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
+        
+    }
+````
+
+
+### Deleting downloaded Asset
+
+To delete a downloaded asset, developer can use `removeDownloadedAsset(assetId:)`
+
+```Swift
+    let _ = enigmaDownloadManager.removeDownloadedAsset(assetId: assetId)
+```
+
 
 ### Fairplay Integration
 
-### Error Handling
+SDK provides an out of the box implementation for downloading FairPlay protected assets. Client applications can create a `downloadTask` & start downloading. SDK will download the relevent FairPlay licences & keys and will use them when you are trying to play a FairPlay protected downloaded asset using  [`ExposurePlayBack`]
+
 
 ## Release Notes
 Release specific changes can be found in the [CHANGELOG](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/CHANGELOG.md).

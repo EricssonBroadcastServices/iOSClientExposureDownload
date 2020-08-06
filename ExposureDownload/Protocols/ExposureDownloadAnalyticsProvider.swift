@@ -31,9 +31,9 @@ public protocol ExposureDownloadAnalyticsProvider {
     /// Sent when the entitlement has been granted, right after loading of media sources has been initiated.
     ///
     /// - parameter tech: DownloadTask responsible for downloading the media
-    /// - parameter source: `PlaybackEntitlement` used to load the request,
+    /// - parameter source: `PlaybackEntitlementV2` used to load the request,
     /// - parameter request: *EMP* asset identifier
-    func onHandshakeStarted(tech: ExposureDownloadTask, source: PlaybackEntitlement, assetId: String)
+    func onHandshakeStarted(tech: ExposureDownloadTask, source: PlayBackEntitlementV2, assetId: String)
     
     /// Downloading of media to device started
     ///
@@ -80,5 +80,5 @@ public protocol ExposureDownloadAnalyticsProvider {
     /// - parameter asset: *EMP* asset identifiers.
     /// - parameter entitlement: The entitlement this session concerns
     /// - parameter heartbeatsProvider: Will deliver heartbeats metadata during the session
-    func finalizePreparation(assetId: String, with entitlement: PlaybackEntitlement, heartbeatsProvider: @escaping () -> AnalyticsEvent?)
+    func finalizePreparation(assetId: String, with entitlement: PlayBackEntitlementV2, heartbeatsProvider: @escaping () -> AnalyticsEvent?)
 }

@@ -12,7 +12,7 @@ import Exposure
 
 internal protocol DownloadFairplayRequester: class {
     /// Entitlement related to this specific *Fairplay* request.
-    var entitlement: PlaybackEntitlement { get }
+    var entitlement: PlayBackEntitlementV2 { get }
     
     /// The DispatchQueue to use for AVAssetResourceLoaderDelegate callbacks.
     var resourceLoadingRequestQueue: DispatchQueue { get }
@@ -38,7 +38,7 @@ extension DownloadFairplayRequester {
     /// - parameter resourceLoadingRequest: loading request to handle
     /// - returns: ´true` if the requester can handle the request, `false` otherwise.
     internal func canHandle(resourceLoadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        
+    
         guard let url = resourceLoadingRequest.request.url else {
             return false
         }
@@ -51,6 +51,7 @@ extension DownloadFairplayRequester {
         resourceLoadingRequestQueue.async { [weak self] in
             guard let weakSelf = self else { return }
             do {
+                
                 if try weakSelf.shouldContactRemote(for: resourceLoadingRequest) {
                     weakSelf.handle(resourceLoadingRequest: resourceLoadingRequest)
                 }
@@ -88,23 +89,22 @@ extension DownloadFairplayRequester {
         print(url, " - ",assetIDString)
         
         fetchApplicationCertificate{ [unowned self] certificate, certificateError in
-            print("fetchApplicationCertificate")
             if let certificateError = certificateError {
-                print("fetchApplicationCertificate ",certificateError.message)
                 resourceLoadingRequest.finishLoading(with: certificateError)
                 return
             }
             
             if let certificate = certificate {
-                print("prepare SPC")
                 do {
                     let spcData = try resourceLoadingRequest.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdentifier, options: self.resourceLoadingRequestOptions)
                     
-                    // Content Key Context fetch from licenseUrl requires base64 encoded data
-                    let spcBase64 = spcData.base64EncodedData(options: Data.Base64EncodingOptions.endLineWithLineFeed)
+                   //  let ckcData = try requestContentKeyFromKeySecurityModule(spcData: certificate, assetID: assetIDString)
                     
-                    self.fetchContentKeyContext(spc: spcBase64) { ckcBase64, ckcError in
-                        print("fetchContentKeyContext")
+                    // Content Key Context fetch from licenseUrl requires base64 encoded data
+                    // let spcBase64 = spcData.base64EncodedData(options: Data.Base64EncodingOptions.endLineWithLineFeed)
+
+                   
+                    self.fetchContentKeyContext(spc: spcData) { ckcBase64, ckcError in
                         if let ckcError = ckcError {
                             print("CKC Error",ckcError.localizedDescription, ckcError.message, ckcError.code)
                             resourceLoadingRequest.finishLoading(with: ckcError)
@@ -124,6 +124,8 @@ extension DownloadFairplayRequester {
                         }
                         
                         do {
+                            
+                            
                             // Allow implementation specific handling of the returned `CKC`
                             let contentKey = try self.onSuccessfulRetrieval(of: ckcBase64, for: resourceLoadingRequest)
                             
@@ -132,7 +134,6 @@ extension DownloadFairplayRequester {
                             resourceLoadingRequest.finishLoading() // Treat the processing of the request as complete.
                         }
                         catch {
-                            print("onSuccessfulRetrieval Error",error)
                             resourceLoadingRequest.finishLoading(with: error)
                         }
                     }
@@ -164,6 +165,7 @@ extension DownloadFairplayRequester {
     /// - note: This method uses a specialized function for parsing the retrieved *Application Certificate* from an *MRR specific* format.
     /// - parameter callback: fires when the certificate is fetched or when an `error` occurs.
     fileprivate func fetchApplicationCertificate(callback: @escaping (Data?, ExposureDownloadTask.Error?) -> Void) {
+        
         guard let url = certificateUrl else {
             callback(nil, .fairplay(reason: .missingApplicationCertificateUrl))
             return
@@ -174,6 +176,7 @@ extension DownloadFairplayRequester {
             .request(url, method: .get)
             .validate()
             .rawResponse{ [weak self] _,_, data, error in
+                
                 if let error = error {
                     callback(nil, .fairplay(reason: .networking(error: error)))
                     return
@@ -181,8 +184,8 @@ extension DownloadFairplayRequester {
                 
                 if let success = data {
                     do {
-                        let certificate = try self?.parseApplicationCertificate(response: success)
-                        callback(certificate, nil)
+                       //  let certificate = try self?.parseApplicationCertificate(response: success)
+                        callback(success, nil)
                     }
                     catch {
                         // parseApplicationCertificate will only throw PlayerError
@@ -194,7 +197,7 @@ extension DownloadFairplayRequester {
     
     /// Retrieve the `certificateUrl` by parsing the *entitlement*.
     fileprivate var certificateUrl: URL? {
-        guard let urlString = entitlement.fairplay?.certificateUrl else { return nil }
+        guard let urlString = entitlement.formats?.first?.fairplay.first?.certificateUrl else { return nil }
         return URL(string: urlString)
     }
     
@@ -224,6 +227,7 @@ extension DownloadFairplayRequester {
     /// </error>
     /// ```
     fileprivate func parseApplicationCertificate(response data: Data) throws -> Data {
+        
         let xml = SWXMLHash.parse(data)
         // MRR Certifica
         if let certString = xml["fps"]["cert"].element?.text {
@@ -236,12 +240,13 @@ extension DownloadFairplayRequester {
         else if let codeString = xml["error"]["code"].element?.text,
             let code = Int(codeString),
             let message = xml["error"]["message"].element?.text {
-            
             throw ExposureDownloadTask.Error.fairplay(reason: .applicationCertificateServer(code: code, message: message))
         }
         throw ExposureDownloadTask.Error.fairplay(reason: .applicationCertificateParsing)
     }
+    
 }
+
 
 // MARK: - Content Key Context
 extension DownloadFairplayRequester {
@@ -252,20 +257,20 @@ extension DownloadFairplayRequester {
     /// - parameter spc: *Server Playback Context*
     /// - parameter callback: fires when `CKC` is fetched or when an `error` occurs.
     fileprivate func fetchContentKeyContext(spc: Data, callback: @escaping (Data?, ExposureDownloadTask.Error?) -> Void) {
+        
         guard let url = licenseUrl else {
             callback(nil, .fairplay(reason: .missingContentKeyContextUrl))
             return
         }
+        
         
         guard let playToken = entitlement.playToken else {
             callback(nil, .fairplay(reason: .missingPlaytoken))
             return
         }
         
-        let headers = [
-            "AzukiApp": playToken, // May not be needed
-            "Content-type": "application/octet-stream"
-        ]
+        var headers = ["Content-type": "application/octet-stream"]
+        headers["Authorization"] =  "Bearer " + playToken
         
         SessionManager
             .default
@@ -275,15 +280,18 @@ extension DownloadFairplayRequester {
                      headers: headers)
             .validate()
             .rawResponse { [weak self] _,_, data, error in
+                
+                
                 if let error = error {
+
                     callback(nil, .fairplay(reason:.networking(error: error)))
                     return
                 }
                 
                 if let success = data {
                     do {
-                        let ckc = try self?.parseContentKeyContext(response: success)
-                        callback(ckc, nil)
+                        
+                        callback(success, nil)
                     }
                     catch {
                         // parseContentKeyContext will only throw PlayerError
@@ -295,7 +303,7 @@ extension DownloadFairplayRequester {
     
     /// Retrieve the `licenseUrl` by parsing the *entitlement*.
     fileprivate var licenseUrl: URL? {
-        guard let urlString = entitlement.fairplay?.licenseAcquisitionUrl else { return nil }
+        guard let urlString = entitlement.formats?.first?.fairplay.first?.licenseServerUrl else { return nil }
         return URL(string: urlString)
     }
     

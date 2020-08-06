@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import Download
 import AVFoundation
 import Exposure
 
+// TODO : Add this in to Exposure 
 public struct OfflineMediaAsset {
-    internal init(assetId: String, entitlement: PlaybackEntitlement?, url: URL?) {
+    internal init(assetId: String, entitlement: PlayBackEntitlementV2?, url: URL?) {
         self.assetId = assetId
         self.entitlement = entitlement
         
@@ -34,8 +34,8 @@ public struct OfflineMediaAsset {
     /// Identifier for this `OfflineMediaAsset`
     public let assetId: String
     
-    /// `PlaybackEntitlement` associated with this media
-    public let entitlement: PlaybackEntitlement?
+    /// `PlaybackEntitlementV2` associated with this media
+    public let entitlement: PlayBackEntitlementV2?
     
     /// `AVURLAsset` used to initiate playback.
     public let urlAsset: AVURLAsset?
@@ -43,7 +43,7 @@ public struct OfflineMediaAsset {
  
     /// Retrieves the `State` of the related media *asynchronously*.
     ///
-    /// An asset is only `.playable` if it has an associated `PlaybackEntitlement` and a valid `url` to the locally stored media files. If either of these criteria are not met, the asset is `.notPlayable`. Not playable assets should be considered damaged and candidates for removal.
+    /// An asset is only `.playable` if it has an associated `PlaybackEntitlementV2` and a valid `url` to the locally stored media files. If either of these criteria are not met, the asset is `.notPlayable`. Not playable assets should be considered damaged and candidates for removal.
     public func state(callback: @escaping (State) -> Void) {
         guard let entitlement = entitlement else {
             callback(.notPlayable(entitlement: self.entitlement, url: self.urlAsset?.url))
@@ -85,17 +85,17 @@ public struct OfflineMediaAsset {
     
     /// The state of the `OfflineMediaAsset`
     public enum State {
-        /// An asset is only `.playable` if it has an associated `PlaybackEntitlement` and a valid `url` to the locally stored media files
+        /// An asset is only `.playable` if it has an associated `PlaybackEntitlementV2` and a valid `url` to the locally stored media files
         ///
         /// - parameter entitlement: Entitlement granted when the download request was made
         /// - parameter url: on device path to the locally stored media
-        case completed(entitlement: PlaybackEntitlement, url: URL)
+        case completed(entitlement: PlayBackEntitlementV2, url: URL)
         
         /// A not playable asset should be considered damaged and a candidate for removal.
         ///
         /// - parameter entitlement: Entitlement granted when the download request was made. If this is nil, it is likely in part the cause for this asset not being playable
         /// - parameter url: on device path to the locally stored media. If this is nil, it is likely in part the cause for this asset not being playable
-        case notPlayable(entitlement: PlaybackEntitlement?, url: URL?)
+        case notPlayable(entitlement: PlayBackEntitlementV2?, url: URL?)
     }
 }
 
