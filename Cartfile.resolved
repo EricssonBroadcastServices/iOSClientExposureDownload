@@ -1,4 +1,4 @@
-github "EricssonBroadcastServices/iOSClientDownload" "7d7435ea93ccf342a67243f158a1de08ccf58233"
-github "EricssonBroadcastServices/iOSClientExposure" "734db891995cc7ef593ccb9c201dc252d3f1c991"
+github "EricssonBroadcastServices/iOSClientDownload" "v2.2.000"
+github "EricssonBroadcastServices/iOSClientExposure" "v2.2.000"
 github "Quick/Nimble" "v8.1.1"
 github "Quick/Quick" "v3.0.0"
