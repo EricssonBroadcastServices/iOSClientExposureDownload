@@ -14,7 +14,7 @@ import Exposure
 /// *Exposure* specific implementation of the `OfflineFairplayRequester` protocol.
 ///
 /// This class handles any *Exposure* related `DRM` validation with regards to *Fairplay*. It is designed to be *plug-and-play* and should require no configuration to use.
-internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequester, FairplayRequester {
+internal class ExposureDownloadFairplayRequester: NSObject, ContentKeyManager, DownloadFairplayRequester, FairplayRequester {
     
     init(entitlement: PlayBackEntitlementV2, assetId: String) {
         self.entitlement = entitlement
@@ -83,71 +83,10 @@ internal class ExposureDownloadFairplayRequester: NSObject, DownloadFairplayRequ
     }
 }
 
-// FIX ALL THIS PERSISTING + LOADING PERSISTED KEYS.
-// FIX Offline vs Download Fairplay requester
-extension ExposureDownloadFairplayRequester {
-    public func persistedContentKeyExists(for assetId: String) throws -> Bool {
-        let url = try contentKeyUrl(for: assetId)
-        return FileManager.default.fileExists(atPath: url.path)
-    }
-    
-    public func deletePersistedContentKey(for assetId: String) throws {
-        let url = try contentKeyUrl(for: assetId)
-        print("Persisted CKC",assetId,url)
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            print("Persisted CKC? : NO")
-            return
-        }
-        try FileManager.default.removeItem(at: url)
-    }
-    
-    internal func persistedContentKey(for assetId: String) throws -> Data? {
-        let url = try contentKeyUrl(for: assetId)
-        print("Persisted CKC",assetId,url)
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            print("Persisted CKC? : NO")
-            return nil
-        }
-        print("Persisted CKC? : YES")
-        return try Data(contentsOf: url)
-    }
-    
-    
-}
-extension ExposureDownloadFairplayRequester {
-    internal func contentKeyDirectory() throws -> URL {
-        let contentKeyDirectory =  try FileManager
-            .default
-            .url(for: .documentDirectory,
-                 in: .userDomainMask,
-                 appropriateFor: nil,
-                 create: true)
-            .appendingPathComponent("emp")
-            .appendingPathComponent("exposure")
-            .appendingPathComponent("offlineMedia")
-            .appendingPathComponent("keys", isDirectory: true)
-        
-        if !FileManager.default.fileExists(atPath: contentKeyDirectory.path, isDirectory: nil) {
-            do {
-                try FileManager.default.createDirectory(at: contentKeyDirectory,
-                                                    withIntermediateDirectories: false,
-                                                    attributes: nil)
-            } catch {
-                fatalError("Unable to create directory for content keys at path: \(contentKeyDirectory.path)")
-            }
-        }
-        
-        return contentKeyDirectory
-    }
-    
-    internal func contentKeyUrl(for assetId: String) throws -> URL {
-        return try contentKeyDirectory().appendingPathComponent("\(assetId)-key")
-    }
-}
-
 // MARK: - AVAssetResourceLoaderDelegate
 extension ExposureDownloadFairplayRequester {
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        print("resourceLoader in ExposureDownloadFairplayRequester ")
         return canHandle(resourceLoadingRequest: loadingRequest)
     }
     

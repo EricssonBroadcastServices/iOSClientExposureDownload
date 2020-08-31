@@ -10,7 +10,7 @@ import Foundation
 import AVFoundation
 import Exposure
 
-internal protocol DownloadFairplayRequester: class {
+internal protocol DownloadFairplayRequester: class, ContentKeyManager {
     /// Entitlement related to this specific *Fairplay* request.
     var entitlement: PlayBackEntitlementV2 { get }
     
@@ -84,11 +84,15 @@ extension DownloadFairplayRequester {
                 return
         }
         
-        
-        
         print(url, " - ",assetIDString)
         
-        fetchApplicationCertificate{ [unowned self] certificate, certificateError in
+       guard let certificateUrl =  certificateUrl    else {
+        resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+            return
+        }
+        
+        // Fetch Fairplay Certificate
+        fetchApplicationCertificate(certificateUrl:certificateUrl ) { [unowned self] certificate, certificateError in
             if let certificateError = certificateError {
                 resourceLoadingRequest.finishLoading(with: certificateError)
                 return
@@ -98,13 +102,21 @@ extension DownloadFairplayRequester {
                 do {
                     let spcData = try resourceLoadingRequest.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdentifier, options: self.resourceLoadingRequestOptions)
                     
-                   //  let ckcData = try requestContentKeyFromKeySecurityModule(spcData: certificate, assetID: assetIDString)
                     
-                    // Content Key Context fetch from licenseUrl requires base64 encoded data
-                    // let spcBase64 = spcData.base64EncodedData(options: Data.Base64EncodingOptions.endLineWithLineFeed)
-
-                   
-                    self.fetchContentKeyContext(spc: spcData) { ckcBase64, ckcError in
+                    guard let url = self.licenseUrl else {
+                        resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingContentKeyContextUrl))
+                        return
+                    }
+                    
+                    
+                    guard let playToken = self.entitlement.playToken else {
+                        resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingPlaytoken))
+                        return
+                    }
+                    
+                    
+                    // Fetch ContentKeyContext
+                    self.fetchContentKeyContext(licenseUrl: url, playToken: playToken, spc: spcData) { ckcBase64, ckcError in
                         if let ckcError = ckcError {
                             print("CKC Error",ckcError.localizedDescription, ckcError.message, ckcError.code)
                             resourceLoadingRequest.finishLoading(with: ckcError)
@@ -124,8 +136,6 @@ extension DownloadFairplayRequester {
                         }
                         
                         do {
-                            
-                            
                             // Allow implementation specific handling of the returned `CKC`
                             let contentKey = try self.onSuccessfulRetrieval(of: ckcBase64, for: resourceLoadingRequest)
                             
@@ -160,194 +170,21 @@ extension DownloadFairplayRequester {
 
 // MARK: - Application Certificate
 extension DownloadFairplayRequester {
-    /// The *Application Certificate* is fetched from a server specified by a `certificateUrl` delivered in the *entitlement* obtained through *Exposure*.
-    ///
-    /// - note: This method uses a specialized function for parsing the retrieved *Application Certificate* from an *MRR specific* format.
-    /// - parameter callback: fires when the certificate is fetched or when an `error` occurs.
-    fileprivate func fetchApplicationCertificate(callback: @escaping (Data?, ExposureDownloadTask.Error?) -> Void) {
-        
-        guard let url = certificateUrl else {
-            callback(nil, .fairplay(reason: .missingApplicationCertificateUrl))
-            return
-        }
-        
-        SessionManager
-            .default
-            .request(url, method: .get)
-            .validate()
-            .rawResponse{ [weak self] _,_, data, error in
-                
-                if let error = error {
-                    callback(nil, .fairplay(reason: .networking(error: error)))
-                    return
-                }
-                
-                if let success = data {
-                    do {
-                       //  let certificate = try self?.parseApplicationCertificate(response: success)
-                        callback(success, nil)
-                    }
-                    catch {
-                        // parseApplicationCertificate will only throw PlayerError
-                        callback(nil, error as? ExposureDownloadTask.Error)
-                    }
-                }
-        }
-    }
     
     /// Retrieve the `certificateUrl` by parsing the *entitlement*.
     fileprivate var certificateUrl: URL? {
         guard let urlString = entitlement.formats?.first?.fairplay.first?.certificateUrl else { return nil }
         return URL(string: urlString)
     }
-    
-    /// MRR Application Certificate response format is XML
-    ///
-    /// Success format
-    /// ```xml
-    /// <fps>
-    ///    <checksum>82033743d5c0</checksum>
-    ///    <version>1.2.3.400</version>
-    ///    <hostname>host.example.com</hostname>
-    ///    <cert>MIIExzCCA6+gAwIBAgIIVRMcpsYSxcIwDQYJKoZIhvcNAQEFBQAwfzELMAkGA1UE</cert>
-    /// </fps>
-    /// ```
-    ///
-    /// `<fps/><cert/>` Contains the Application Certificate as base64 encoded string
-    ///
-    ///
-    /// Error format
-    /// ```xml
-    /// <error>
-    ///    <checksum>82033743d5c0</checksum>
-    ///    <version>1.2.3.400</version>
-    ///    <hostname>Some host</hostname>
-    ///    <code>500</code>
-    ///    <message>Error message</message>
-    /// </error>
-    /// ```
-    fileprivate func parseApplicationCertificate(response data: Data) throws -> Data {
-        
-        let xml = SWXMLHash.parse(data)
-        // MRR Certifica
-        if let certString = xml["fps"]["cert"].element?.text {
-            // http://iosdevelopertips.com/core-services/encode-decode-using-base64.html
-            guard let base64 = Data(base64Encoded: certString, options: Data.Base64DecodingOptions.ignoreUnknownCharacters) else {
-                throw ExposureDownloadTask.Error.fairplay(reason: .applicationCertificateDataFormatInvalid)
-            }
-            return base64
-        }
-        else if let codeString = xml["error"]["code"].element?.text,
-            let code = Int(codeString),
-            let message = xml["error"]["message"].element?.text {
-            throw ExposureDownloadTask.Error.fairplay(reason: .applicationCertificateServer(code: code, message: message))
-        }
-        throw ExposureDownloadTask.Error.fairplay(reason: .applicationCertificateParsing)
-    }
-    
 }
 
 
 // MARK: - Content Key Context
 extension DownloadFairplayRequester {
-    /// Fetching a *Content Key Context*, `CKC`, requires a valid *Server Playback Context*.
-    ///
-    /// - note: This method uses a specialized function for parsing the retrieved *Content Key Context* from an *MRR specific* format.
-    ///
-    /// - parameter spc: *Server Playback Context*
-    /// - parameter callback: fires when `CKC` is fetched or when an `error` occurs.
-    fileprivate func fetchContentKeyContext(spc: Data, callback: @escaping (Data?, ExposureDownloadTask.Error?) -> Void) {
-        
-        guard let url = licenseUrl else {
-            callback(nil, .fairplay(reason: .missingContentKeyContextUrl))
-            return
-        }
-        
-        
-        guard let playToken = entitlement.playToken else {
-            callback(nil, .fairplay(reason: .missingPlaytoken))
-            return
-        }
-        
-        var headers = ["Content-type": "application/octet-stream"]
-        headers["Authorization"] =  "Bearer " + playToken
-        
-        SessionManager
-            .default
-            .request(url,
-                     method: .post,
-                     data: spc,
-                     headers: headers)
-            .validate()
-            .rawResponse { [weak self] _,_, data, error in
-                
-                
-                if let error = error {
 
-                    callback(nil, .fairplay(reason:.networking(error: error)))
-                    return
-                }
-                
-                if let success = data {
-                    do {
-                        
-                        callback(success, nil)
-                    }
-                    catch {
-                        // parseContentKeyContext will only throw PlayerError
-                        callback(nil, error as? ExposureDownloadTask.Error)
-                    }
-                }
-        }
-    }
-    
     /// Retrieve the `licenseUrl` by parsing the *entitlement*.
     fileprivate var licenseUrl: URL? {
         guard let urlString = entitlement.formats?.first?.fairplay.first?.licenseServerUrl else { return nil }
         return URL(string: urlString)
     }
-    
-    /// MRR Content Key Context response format is XML
-    ///
-    /// Success format
-    /// ```xml
-    /// <fps>
-    ///    <checksum>82033743d5c0</checksum>
-    ///    <version>1.2.3.400</version>
-    ///    <hostname>host.example.com</hostname>
-    ///    <ckc>MIIExzCCA6+gAwIBAgIIVRMcpsYSxcIwDQYJKoZIhvcNAQEFBQAwfzELMAkGA1UE</cert>
-    /// </fps>
-    /// ```
-    ///
-    /// `<fps/><ckc/>` Contains the Application Certificate as base64 encoded string
-    ///
-    ///
-    /// Error format
-    /// ```xml
-    /// <error>
-    ///    <checksum>82033743d5c0</checksum>
-    ///    <version>1.2.3.400</version>
-    ///    <hostname>Some host</hostname>
-    ///    <code>500</code>
-    ///    <message>Error message</message>
-    /// </error>
-    /// ```
-    fileprivate func parseContentKeyContext(response data: Data) throws -> Data {
-        let xml = SWXMLHash.parse(data)
-        if let ckc = xml["fps"]["ckc"].element?.text {
-            // http://iosdevelopertips.com/core-services/encode-decode-using-base64.html
-            guard let base64 = Data(base64Encoded: ckc, options: Data.Base64DecodingOptions.ignoreUnknownCharacters) else {
-                throw ExposureDownloadTask.Error.fairplay(reason: .contentKeyContextDataFormatInvalid)
-            }
-            return base64
-        }
-        else if let codeString = xml["error"]["code"].element?.text,
-            let code = Int(codeString),
-            let message = xml["error"]["message"].element?.text {
-            
-            throw ExposureDownloadTask.Error.fairplay(reason: .contentKeyContextServer(code: code, message: message))
-        }
-        throw ExposureDownloadTask.Error.fairplay(reason: .contentKeyContextParsing)
-    }
-    
 }

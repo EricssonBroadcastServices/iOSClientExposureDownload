@@ -213,7 +213,7 @@ extension ExposureDownloadTask.Error.FairplayError {
     }
 }
 
-public final class ExposureDownloadTask: TaskType {
+public final class ExposureDownloadTask: NSObject, ContentKeyManager, TaskType, AVAssetResourceLoaderDelegate {
     
     internal var entitlementRequest: ExposureRequest<PlayBackEntitlementV2>?
     
@@ -230,10 +230,13 @@ public final class ExposureDownloadTask: TaskType {
     public let sessionToken: SessionToken
     public let environment: Environment
     
+    internal let resourceLoadingRequestQueue = DispatchQueue(label: "com.emp.exposure.offline.fairplay.requests")
+    internal let resourceLoadingRequestOptions: [String : AnyObject]? = [AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey: true as AnyObject]
+    
     
     public lazy var delegate: Download.TaskDelegate = { [unowned self] in
         return Download.TaskDelegate(task: self)
-    }()
+        }()
     
     internal init(assetId: String, sessionManager: Download.SessionManager<ExposureDownloadTask> , sessionToken: SessionToken, environment: Environment) {
         self.configuration = Configuration(identifier: assetId)
@@ -287,14 +290,14 @@ extension ExposureDownloadTask {
         configuration.url = entitlement.formats?.first?.mediaLocator
         
         sessionManager.restoreTask(with: configuration.identifier) { restoredTask in
-
+            
             if let restoredTask = restoredTask {
                 self.configureResourceLoader(for: restoredTask)
                 
                 self.task = restoredTask
                 self.sessionManager.delegate[restoredTask] = self
                 
-             self.handle(restoredTask: restoredTask)
+                self.handle(restoredTask: restoredTask)
             }
             else {
                 if forceNew {
@@ -322,8 +325,6 @@ extension ExposureDownloadTask {
     
     fileprivate func startEntitlementRequest(assetId: String, lazily: Bool, callback: @escaping () -> Void) {
         // Prepare the next event
-
-        
         entitlementRequest = Entitlement(environment:environment,
                                          sessionToken: sessionToken)
             .download(assetId: assetId)
@@ -336,7 +337,7 @@ extension ExposureDownloadTask {
                     
                     return
                 }
-
+                
                 self.entitlementRequest = nil
                 self.entitlement = entitlement
                 self.onEntitlementResponse(self, entitlement)
@@ -346,6 +347,308 @@ extension ExposureDownloadTask {
                 self.restoreOrCreate(for: entitlement, forceNew: !lazily, callback: callback)
         }
     }
+    
+    
+    /// Validate the download
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - completionHandler: completionHandler
+    fileprivate func validateEntitlementRequest(assetId: String, completionHandler: @escaping (PlayBackEntitlementV2?, ExposureError?) -> Void) {
+        
+        entitlementRequest = Entitlement(environment:environment,
+                                         sessionToken: sessionToken)
+            .validate(downloadId: self.configuration.identifier)
+            .request()
+            .validate()
+            .response {
+                guard let entitlement = $0.value else {
+                    self.eventPublishTransmitter.onError(self, nil, $0.error!)
+                    completionHandler(nil, $0.error)
+                    return
+                }
+                
+                completionHandler(entitlement, nil )
+        }
+    }
+    
+    
+    /// create the RefreshLicenceTask
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - lazily: lazily
+    ///   - callback: call back
+    fileprivate func createRefreshLicenceTask(assetId: String, lazily: Bool, callback: @escaping () -> Void) {
+        validateEntitlementRequest(assetId: assetId) { entitlement, error in
+            if let error = error {
+                self.eventPublishTransmitter.onError(self, nil, error)
+            }
+            
+            guard let url = entitlement?.formats?.first?.mediaLocator  else {
+                print("Media Locator URL is missing from the entitlement ")
+                self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .missingPlaytoken))
+                return
+            }
+            
+            self.configuration.url = url
+            
+            self.sessionManager.restoreTask(with: self.configuration.identifier) { restoredTask in
+                
+                
+                let options = self.configuration.requiredBitrate != nil ? [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: self.configuration.requiredBitrate!] : nil
+                
+                if let url = self.configuration.url {
+                    let asset = AVURLAsset(url: url)
+                    
+                    asset.resourceLoader.preloadsEligibleContentKeys = true
+                    asset.resourceLoader.setDelegate(self, queue: DispatchQueue.main)
+                    
+                    if #available(iOS 10.0, *) {
+                        guard let task = self.sessionManager
+                            .session
+                            .makeAssetDownloadTask(asset: asset,
+                                                   assetTitle: self.configuration.identifier,
+                                                   assetArtworkData: self.configuration.artwork,
+                                                   options: options) else {
+                                                    // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
+                                                    print("Error downloadSessionInvalidated")
+                                                    return
+                        }
+                        task.taskDescription = self.configuration.identifier
+                        
+                        let queue = DispatchQueue(label: self.configuration.identifier + "-offlineFairplayLoader")
+
+                        task.urlAsset
+                            .resourceLoader
+                            .setDelegate(self, queue: queue)
+                        
+                        self.sessionManager.delegate[task] = self
+                        self.eventPublishTransmitter.onPrepared(self)
+                        
+                    }
+                        
+                        
+                    else {
+                        guard let destination = self.responseData.destination else {
+                            //callback(nil, TaskError.failedToStartTaskWithoutDestination)
+                            print("failedToStartTaskWithoutDestination ")
+                            return
+                        }
+                        guard let task = self.sessionManager
+                            .session
+                            .makeAssetDownloadTask(asset: asset,
+                                                   destinationURL: destination,
+                                                   options: options) else {
+                                                    // This method may return nil if the URLSession has been invalidated
+                                                    
+                                                    print("downloadSessionInvalidated in else ")
+                                                    // callback(nil, TaskError.downloadSessionInvalidated)
+                                                    return
+                        }
+                        task.taskDescription = self.configuration.identifier
+                        
+                        self.sessionManager.delegate[task] = self
+                        self.eventPublishTransmitter.onPrepared(self)
+                        
+                    }
+                }
+                
+                print("✅ No AVAssetDownloadTask prepared, creating new for: \(self.configuration.identifier)")
+            }
+        }
+        
+        
+    }
+    
+    private func createAndConfigureTaskForUpdate(with options: [String: Any]?, using configuration: Configuration, callback: (AVAssetDownloadTask?, TaskError?) -> Void) {
+        guard let url = configuration.url else {
+            callback(nil, TaskError.targetUrlNotFound)
+            return
+        }
+        
+        if #available(iOS 10.0, *) {
+            guard let task = sessionManager
+                .session
+                .makeAssetDownloadTask(asset: AVURLAsset(url: url),
+                                       assetTitle: configuration.identifier,
+                                       assetArtworkData: configuration.artwork,
+                                       options: options) else {
+                                        // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
+                                        callback(nil, TaskError.downloadSessionInvalidated)
+                                        return
+            }
+            task.taskDescription = configuration.identifier
+            configureResourceLoader(for: task)
+            callback(task,nil)
+        }
+        else {
+            guard let destination = responseData.destination else {
+                callback(nil, TaskError.failedToStartTaskWithoutDestination)
+                return
+            }
+            guard let task = sessionManager
+                .session
+                .makeAssetDownloadTask(asset: AVURLAsset(url: url),
+                                       destinationURL: destination,
+                                       options: options) else {
+                                        // This method may return nil if the URLSession has been invalidated
+                                        callback(nil, TaskError.downloadSessionInvalidated)
+                                        return
+            }
+            task.taskDescription = configuration.identifier
+            configureResourceLoader(for: task)
+            callback(task,nil)
+        }
+    }
+    
+    
+    
+    /// Update the licence for the downloaded asset id
+    /// - Parameter resourceLoadingRequest: resourceLoadingRequest
+    func updateCertificate(resourceLoadingRequest: AVAssetResourceLoadingRequest) {
+        
+        guard let url = resourceLoadingRequest.request.url,
+            let assetIDString = url.host,
+            let contentIdentifier = assetIDString.data(using: String.Encoding.utf8) else {
+                resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .invalidContentIdentifier))
+                return
+        }
+        
+        self.validateEntitlementRequest(assetId: self.configuration.identifier) { entitlement, error in
+            if let error = error {
+                self.eventPublishTransmitter.onError(self, nil, error )
+            }
+            
+            guard let certificateurl = entitlement?.formats?.first?.fairplay.first?.certificateUrl else {
+                print("certificateUrl in the entitlement is missing")
+                resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+                self.eventPublishTransmitter.onError(self, nil,ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+                return
+            }
+            
+            guard let certificateUrl = URL(string: certificateurl) else  {
+                print("Failed converting certificateUrl string to URL")
+                resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+                self.eventPublishTransmitter.onError(self, nil,ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+                return
+                
+            }
+            
+            self.fetchApplicationCertificate(certificateUrl: certificateUrl) { [unowned self] certificate, certificateError in
+                if let certificateError = certificateError {
+                    resourceLoadingRequest.finishLoading(with: certificateError)
+                    self.eventPublishTransmitter.onError(self, nil,certificateError)
+                    return
+                }
+                
+                if let certificate = certificate {
+                    do {
+                        let spcData = try resourceLoadingRequest.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdentifier, options: self.resourceLoadingRequestOptions)
+                        
+                        guard let playToken = entitlement?.playToken, let licenseServerUrl = entitlement?.formats?.first?.fairplay.first?.licenseServerUrl else {
+                            self.eventPublishTransmitter.onError(self, nil,ExposureDownloadTask.Error.fairplay(reason: .missingPlaytoken))
+                            return
+                        }
+                        
+                        guard let licenseUrl = URL(string: licenseServerUrl) else {
+                            print("Failed converting licenseUrl string to URL")
+                            self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl))
+                            return
+                            
+                        }
+                        
+                        
+                        self.fetchContentKeyContext(licenseUrl: licenseUrl, playToken: playToken, spc: spcData) { ckcBase64, ckcError in
+                            if let ckcError = ckcError {
+                                print("CKC Error",ckcError.localizedDescription, ckcError.message, ckcError.code)
+                                resourceLoadingRequest.finishLoading(with: ckcError)
+                                self.eventPublishTransmitter.onError(self, nil, ckcError)
+                                return
+                            }
+                            
+                            guard let dataRequest = resourceLoadingRequest.dataRequest else {
+                                print("dataRequest Error",ExposureDownloadTask.Error.fairplay(reason: .missingDataRequest).message)
+                                resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingDataRequest))
+                                self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .missingDataRequest))
+                                return
+                            }
+                            
+                            guard let ckcBase64 = ckcBase64 else {
+                                print("ckcBase64 Error",ExposureDownloadTask.Error.fairplay(reason: .missingContentKeyContext).message)
+                                resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .missingContentKeyContext))
+                                self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .missingContentKeyContext))
+                                return
+                            }
+                            
+                            do {
+                                resourceLoadingRequest.contentInformationRequest?.contentType = AVStreamingKeyDeliveryPersistentContentKeyType
+                                
+                                let (contentKey, contentKeyUrl) = try self.onSuccessfulRetrieval(assetId: self.configuration.identifier, of: ckcBase64, for: resourceLoadingRequest)
+                                dataRequest.respond(with: contentKey)
+                                resourceLoadingRequest.finishLoading()
+                                
+                                self.eventPublishTransmitter.onCompleted(self, contentKeyUrl)
+                                
+                                
+                            } catch {
+                                print("Catch Errior elf?.onSuccessfulRetrieval" , error )
+                                resourceLoadingRequest.finishLoading(with: error)
+                                self.eventPublishTransmitter.onError(self, nil, error)
+                            }
+                            
+                        }
+                        
+                    }
+                    catch {
+                        //                    -42656 Lease duration has expired.
+                        //                    -42668 The CKC passed in for processing is not valid.
+                        //                    -42672 A certificate is not supplied when creating SPC.
+                        //                    -42673 assetId is not supplied when creating an SPC.
+                        //                    -42674 Version list is not supplied when creating an SPC.
+                        //                    -42675 The assetID supplied to SPC creation is not valid.
+                        //                    -42676 An error occurred during SPC creation.
+                        //                    -42679 The certificate supplied for SPC creation is not valid.
+                        //                    -42681 The version list supplied to SPC creation is not valid.
+                        //                    -42783 The certificate supplied for SPC is not valid and is possibly revoked.
+                        print("SPC - ",error.localizedDescription)
+                        resourceLoadingRequest.finishLoading(with: ExposureDownloadTask.Error.fairplay(reason: .serverPlaybackContext(error: error)))
+                        self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .serverPlaybackContext(error: error)))
+                        return
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    
+    func onSuccessfulRetrieval(assetId: String, of ckc: Data, for resourceLoadingRequest: AVAssetResourceLoadingRequest) throws -> (Data, URL) {
+        let persistedKeyURL = try contentKeyUrl(for: assetId)
+        let persistedCKC = try resourceLoadingRequest.persistentContentKey(fromKeyVendorResponse: ckc, options: nil)
+        try persistedCKC.write(to: persistedKeyURL, options: Data.WritingOptions.atomicWrite)
+        print("renewed license saved at :  ", persistedKeyURL)
+        return (persistedCKC, persistedKeyURL)
+    }
+    
+    internal func canHandle(resourceLoadingRequest: AVAssetResourceLoadingRequest) ->Bool {
+        resourceLoadingRequestQueue.async { [weak self] in
+            self?.updateCertificate(resourceLoadingRequest: resourceLoadingRequest)
+        }
+        return true
+    }
+    
+    
+    
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        print("shouldWaitForLoadingOfRequestedResource")
+        return canHandle(resourceLoadingRequest: loadingRequest)
+    }
+    
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
+        print("shouldWaitForRenewalOfRequestedResource")
+        return canHandle(resourceLoadingRequest: renewalRequest)
+    }
+    
+    
 }
 
 extension ExposureDownloadTask {
@@ -411,7 +714,27 @@ extension ExposureDownloadTask {
     
     public func use(bitrate: Int64?) -> Self {
         self.configuration.requiredBitrate = bitrate
+        
         return self
+    }
+    
+    
+    public func refreshLicence() {
+        guard let downloadTask = task else {
+            guard let entitlementRequest = entitlementRequest else {
+                createRefreshLicenceTask(assetId: configuration.identifier, lazily: false) { [weak self] in
+                    guard let `self` = self else { return }
+                    `self`.task?.resume()
+                    `self`.eventPublishTransmitter.onResumed(`self`)
+                }
+                return
+            }
+            entitlementRequest.resume()
+            eventPublishTransmitter.onResumed(self) // TODO: Remove pause/resume functionality for entitlementreq
+            return
+        }
+        downloadTask.resume()
+        eventPublishTransmitter.onResumed(self)
     }
     
     public enum State {
@@ -458,7 +781,7 @@ extension ExposureDownloadTask: Download.EventPublisher {
         return self
     }
     
-//    public func onStarted(callback:
+    //    public func onStarted(callback:
     
     public func onCompleted(callback: @escaping (ExposureDownloadTask, URL) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onCompleted = { [weak self] task, url in
