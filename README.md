@@ -26,9 +26,9 @@
 
 ## Requirements
 
-* `iOS` 11.0+
-* `Swift` 4.2+
-* `Xcode` 10.0+
+* `iOS` 11.0+ (`FairPlay` requires `iOS` 10.0+)
+* `Swift` 5.0+
+* `Xcode` 10.2+
 
 * Framework dependencies
     - [`Download`](https://github.com/EricssonBroadcastServices/iOSClientDownload)

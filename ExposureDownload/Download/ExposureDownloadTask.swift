@@ -712,13 +712,44 @@ extension ExposureDownloadTask {
         }
     }
     
+    
+    /// Download the video track with specific bitrate
+    /// - Parameter bitrate: bitrate
+    /// - Returns: self
     public func use(bitrate: Int64?) -> Self {
         self.configuration.requiredBitrate = bitrate
-        
         return self
     }
     
     
+    /// Download specific subtitles
+    /// - Parameter hlsNames: hlsNames
+    /// - Returns: self
+    public func addSubtitles(hlsNames: [String] ) -> Self {
+        self.configuration.subtitles = hlsNames
+        return self
+    }
+    
+    
+    /// Download specific audios
+    /// - Parameter hlsNames: hlsNames
+    /// - Returns: self
+    public func addAudios(hlsNames: [String] ) -> Self {
+        self.configuration.audios = hlsNames
+        return self
+    }
+    
+    
+    /// Download All Audios & subtitles
+    /// - Returns: self
+    public func addAllAdditionalMedia() -> Self {
+        self.configuration.allAudiosSubs = true
+        return self
+    }
+    
+    
+    
+    /// Refresh fairplay licences
     public func refreshLicence() {
         guard let downloadTask = task else {
             guard let entitlementRequest = entitlementRequest else {
