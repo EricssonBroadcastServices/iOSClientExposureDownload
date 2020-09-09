@@ -85,7 +85,6 @@ All assets might not be downloadable even if a customer supports download. There
 
 Then client applications can perform the download check by passing the `assetId` & the `UserAvailabilityKeys`. 
 
-
 ```Swift
     enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, availabilityKeys: availabilityKeys ) { _ in 
         // Handle Response ( true / false )
@@ -139,17 +138,41 @@ To download an `Asset` client applications can create a `downloadTask` by passin
     .onProgress { _, progress in
         print("📱 Percent", progress.current*100,"%")
     }
-    .onShouldDownloadMediaOption{ _,_ in
-        print("📱 Select media option")
-    }
-    .onDownloadingMediaOption{ _,_ in
-        print("📱 Downloading media option")
-    }
     .onError {_, url, error in
         print("📱 Download error: \(error)")
     }
     .onCompleted { _, url in
         print("📱 Download completed: \(url)")
+    }
+```
+
+### Downloading Additional Media
+
+To download Additional Media such as audios & subtitles client applications can use the same   `downloadTask`. 
+```Swift 
+
+    task.addAllAdditionalMedia() // will download all aditional media 
+
+    // .addAudios(hlsNames: ["French", "German"])
+    // .addSubtitles(hlsNames: ["French"])
+```
+
+### Refresh licence
+Client applications can use `enigmaDownloadManager` check if the license for a download asset has expired by passing the `assetId`
+
+```Swift
+    enigmaDownloadManager.isExpired(assetId: asset.assetId) // true / false 
+```
+
+If the license has expired , you need to use the `downloadTask` to refresh the licenses.
+
+```Swift
+    task.refreshLicence()
+    task.onError {_, url, error in
+        print("📱 RefreshLicence Task failed with an error: \(error)",url ?? "")
+    }
+    .onCompleted { _, url in
+        print("📱 RefreshLicence Task completed: \(url)")
     }
 ```
 
