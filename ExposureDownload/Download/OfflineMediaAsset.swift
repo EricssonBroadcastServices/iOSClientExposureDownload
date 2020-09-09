@@ -10,7 +10,6 @@ import Foundation
 import AVFoundation
 import Exposure
 
-// TODO : Add this in to Exposure 
 public struct OfflineMediaAsset {
     internal init(assetId: String, entitlement: PlayBackEntitlementV2?, url: URL?) {
         self.assetId = assetId

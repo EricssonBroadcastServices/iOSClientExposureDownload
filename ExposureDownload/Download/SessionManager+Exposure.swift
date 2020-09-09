@@ -274,23 +274,19 @@ extension Download.SessionManager where T == ExposureDownloadTask {
             .validate()
             .response{
                 if let asset = $0.value, let publications = asset.publications {
-                    
-                    print("PUBLICATIONS " , publications )
-                    
+
                     // Check if the any publications have the right.downloadBlocked == false or not available
                     let publicationsWithDownloadNotBlocked = publications.filter { $0.rights?.downloadBlocked == false || $0.rights == nil }
-                    
-                    print("publicationsWithDownloadNotBlocked ", publicationsWithDownloadNotBlocked )
-                    
                     if publicationsWithDownloadNotBlocked.count == 0 { completionHandler(false) }
                     
                     else {
                         
-                        // Check if the publications are within the NOW time range ( publications FromDate <= CurrentTIME <= toDate )
-                        let publicationsWithinNowTimeRange = publicationsWithDownloadNotBlocked.filter { ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 && Date().millisecondsSince1970 <= ($0.toDate)?.toDate()?.millisecondsSince1970 ?? 0 }
-                        
-                        print("publicationsWithinNowTimeRange " , publicationsWithinNowTimeRange )
-                        
+                        /// FromDate is a Past date  & ToDate is Future Date  or  fromDate is a Past date &  ToDate is not available ==>> Should be able to download
+                        /// FromDate & ToDate is a pastDate ==> should not be able to download
+                        /// FromDate is a future date ==> Should not be available to download
+                        /// FromDate not available ==>> Should not be available to download
+                        let publicationsWithinNowTimeRange = publications.filter { ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 && Date().millisecondsSince1970 <= ($0.toDate)?.toDate()?.millisecondsSince1970 ?? 0 || ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 }
+ 
                         if publicationsWithinNowTimeRange.count == 0 { completionHandler(false)  }
                         
                         else {
@@ -337,5 +333,29 @@ extension Download.SessionManager where T == ExposureDownloadTask {
                     completionHandler(nil)
                 }
         }
+    }
+    
+    
+    /// Check if the license has expired or not
+    /// - Parameter assetId: asset id
+    /// - Returns: true if the license has expired
+    public func isExpired(assetId: String)-> Bool {
+        let downloadedAsset = getDownloadedAsset(assetId: assetId)
+        guard let playTokenExpiration = downloadedAsset?.entitlement?.playTokenExpiration else {
+            return true
+        }
+
+        let today = Date().millisecondsSince1970
+        
+        return playTokenExpiration >= today ? false : true
+    }
+    
+    
+    /// get the license expiration time
+    /// - Parameter assetId: asset id
+    /// - Returns: playTokenExpiration
+    public func getExpiryTime(assetId: String)->Int? {
+        let downloadedAsset = getDownloadedAsset(assetId: assetId)
+        return downloadedAsset?.entitlement?.playTokenExpiration
     }
 }
