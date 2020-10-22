@@ -342,7 +342,7 @@ extension ExposureDownloadTask {
                 self.entitlement = entitlement
                 self.onEntitlementResponse(self, entitlement)
                 
-                self.sessionManager.save(assetId: assetId, entitlement: entitlement, url: nil)
+                self.sessionManager.save(assetId: assetId, accountId: self.sessionToken.accountId, entitlement: entitlement, url: nil)
                 
                 self.restoreOrCreate(for: entitlement, forceNew: !lazily, callback: callback)
         }
@@ -366,7 +366,6 @@ extension ExposureDownloadTask {
                     completionHandler(nil, $0.error)
                     return
                 }
-                
                 completionHandler(entitlement, nil )
         }
     }
@@ -586,7 +585,11 @@ extension ExposureDownloadTask {
                                 dataRequest.respond(with: contentKey)
                                 resourceLoadingRequest.finishLoading()
                                 
-                                self.eventPublishTransmitter.onCompleted(self, contentKeyUrl)
+                                print("SHOULD CALL ON LICENR RENEWAL ")
+                                
+                                // sendDownloadRenewed(assetId: assetIDString)
+                                
+                                self.eventPublishTransmitter.onLicenceRenewed(self, contentKeyUrl)
                                 
                                 
                             } catch {
@@ -647,8 +650,6 @@ extension ExposureDownloadTask {
         print("shouldWaitForRenewalOfRequestedResource")
         return canHandle(resourceLoadingRequest: renewalRequest)
     }
-    
-    
 }
 
 extension ExposureDownloadTask {
@@ -750,7 +751,7 @@ extension ExposureDownloadTask {
     
     
     /// Refresh fairplay licences
-    public func refreshLicence() {
+    public func renewLicence() {
         guard let downloadTask = task else {
             guard let entitlementRequest = entitlementRequest else {
                 createRefreshLicenceTask(assetId: configuration.identifier, lazily: false) { [weak self] in
@@ -812,12 +813,14 @@ extension ExposureDownloadTask: Download.EventPublisher {
         return self
     }
     
-    //    public func onStarted(callback:
-    
     public func onCompleted(callback: @escaping (ExposureDownloadTask, URL) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onCompleted = { [weak self] task, url in
             guard let `self` = self else { return }
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, entitlement: `self`.entitlement, url: url)
+
+            // Inform the exposure backend that the download has completed
+            self.sendDownloadCompleted(assetId: `self`.configuration.identifier)
+            
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
             callback(task,url)
         }
         return self
@@ -826,8 +829,22 @@ extension ExposureDownloadTask: Download.EventPublisher {
     public func onError(callback: @escaping (ExposureDownloadTask, URL?, Swift.Error) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onError = { [weak self] task, url, error in
             guard let `self` = self else { return }
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, entitlement: `self`.entitlement, url: url)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
             callback(task,url, error)
+        }
+        return self
+    }
+    
+    
+    public func onLicenceRenewed(callback: @escaping (ExposureDownloadTask, URL) -> Void) -> ExposureDownloadTask {
+        eventPublishTransmitter.onLicenceRenewed = { [weak self] task, url in
+            guard let `self` = self else { return }
+
+            // Inform the exposure backend that the licence has renewed
+            self.sendDownloadRenewed(assetId: `self`.configuration.identifier)
+            
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
+            callback(task,url)
         }
         return self
     }
@@ -850,5 +867,41 @@ extension ExposureDownloadTask {
     public func onEntitlementRequestCancelled(callback: @escaping (ExposureDownloadTask) -> Void) -> ExposureDownloadTask {
         onEntitlementRequestCancelled = callback
         return self
+    }
+}
+
+extension ExposureDownloadTask {
+    
+    
+    /// Send download renewal completion to the exposure
+    /// - Parameter assetId: assetId
+    internal func sendDownloadRenewed(assetId: String) {
+        SendDownloadRenewed(assetId: assetId, environment: environment, sessionToken: sessionToken)
+            .request()
+            .validate()
+            .response { result in
+                if result.error != nil {
+                    // Ignore any errors , keep the downloaded media
+                    print("🚨 DownloadRenewed request to the Backend was failed. Error from Exposure : \(result.error )" )
+                } else {
+                    print("✅ DownloadRenewed request to the Backend was success. Message from Exposure : \(result.value )" )
+                }
+            }
+    }
+    
+    /// Send the download completion to the exposure
+    /// - Parameter assetId: asset id
+    internal func sendDownloadCompleted(assetId: String) {
+        SendDownloadCompleted(assetId: assetId, environment: environment, sessionToken: sessionToken)
+        .request()
+        .validate()
+        .response { result in
+            if result.error != nil {
+                // Ignore any errors , keep the downloaded media
+                print("🚨 Download completion request to the Backend was failed. Error from Exposure : \(result.error )" )
+            } else {
+                print("✅ Download completion request to the Backend was success. Message from Exposure : \(result.value )" )
+            }
+        }
     }
 }
