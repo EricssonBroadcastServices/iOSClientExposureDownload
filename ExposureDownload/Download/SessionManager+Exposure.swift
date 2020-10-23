@@ -105,6 +105,17 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         return localMedia.map{ resolve(mediaRecord: $0) }
     }
     
+    public func getDownloadedAssets(accountId:String?) -> [OfflineMediaAsset] {
+        guard let localMedia = localMediaRecords else { return [] }
+        
+        guard let accountId = accountId else {
+            return []
+        }
+        
+        var allLocalMdeia = localMedia.map{ resolve(mediaRecord: $0) }
+        return allLocalMdeia.filter(){ $0.accountId == accountId }
+    }
+    
     public func delete(media: OfflineMediaAsset) {
         remove(localRecordId: media.assetId)
         do {
@@ -122,12 +133,26 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     
     /// Delete a downloaded asset
     /// - Parameter assetId: assetId
-    public func removeDownloadedAsset(assetId: String) {
+    public func removeDownloadedAsset(assetId: String, sessionToken: SessionToken, environment: Environment) {
         guard let media = getDownloadedAsset(assetId: assetId) else { return }
         delete(media: media)
+        
+        DeleteDownload(assetId: assetId, environment:environment, sessionToken: sessionToken)
+        .request()
+        .validate()
+        .response { result in
+            
+            if result.error != nil {
+                print("🚨 Deletion request to the Backend was failed. Error from Exposure : \(result.error )" )
+            } else {
+                print("✅ Pass Deletion request to the Backend was success. Message from Exposure : \(result.value )" )
+            }
+        }
+        
+        
     }
     
-    internal func save(assetId: String, entitlement: PlayBackEntitlementV2?, url: URL?) {
+    internal func save(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?) {
         do {
             if let currentAsset = getDownloadedAsset(assetId: assetId) {
                 if currentAsset.urlAsset?.url != nil {
@@ -140,7 +165,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
                 }
             }
             
-            let record = try LocalMediaRecord(assetId: assetId, entitlement: entitlement, completedAt: url)
+            let record = try LocalMediaRecord(assetId: assetId, accountId: accountId, entitlement: entitlement, completedAt: url)
             save(localRecord: record)
         }
         catch {
@@ -173,7 +198,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     fileprivate func resolve(mediaRecord: LocalMediaRecord) -> OfflineMediaAsset {
         var bookmarkDataIsStale = false
         guard let urlBookmark = mediaRecord.urlBookmark else {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
         }
         
         do {
@@ -186,13 +211,13 @@ extension Download.SessionManager where T == ExposureDownloadTask {
              } */
             
             guard !bookmarkDataIsStale else {
-                return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
+                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
             }
             
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: url)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: url)
         }
         catch {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, entitlement: mediaRecord.entitlement, url: nil)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
         }
     }
 }

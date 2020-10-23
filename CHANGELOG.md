@@ -1,5 +1,6 @@
 # CHANGELOG
 
+ `2.2.30` Release - [2.2.30](#2230)
 * `2.2.20` Release - [2.2.20](#2220)
 * `2.2.10` Release - [2.2.10](#2210)
 * `2.2.00` Release - [2.2.00](#2200)
@@ -8,6 +9,13 @@
 * `0.79.0` Release - [0.79.0](#0790)
 * `0.78.0` Release - [0.78.0](#0780)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+
+## 2.2.300
+#### Changes
+* `EMP-15210` Notify DownloadBookKeeper when a download is complete or when a DRM license is refreshed
+* `EMP-15210` Notify DownloadBookKeeper when user deleted a downloaded media. 
+
 
 ## 2.2.200
 #### Bug Fixes
