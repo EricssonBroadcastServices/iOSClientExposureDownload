@@ -45,7 +45,7 @@ class SessionManagerExposureSpec: QuickSpec, EnigmaDownloadManager {
         
         
         let entitlement = json.decode(PlayBackEntitlementV2.self)
-        let downloadedAsset = OfflineMediaAsset(assetId: "assetId", entitlement: entitlement, url: URL(string: "fileURL"))
+        let downloadedAsset = OfflineMediaAsset(assetId: "assetId", accountId: "accountId",  entitlement: entitlement, url: URL(string: "fileURL"))
     
             
          describe("OfflineMedia Assets") {
