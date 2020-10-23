@@ -46,9 +46,9 @@
 		76A89D362020A26800C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D382020A26800C23579 /* Exposure.framework */; };
 		76A89D392020A27700C23579 /* Download.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3E2020A27700C23579 /* Download.framework */; };
 		76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3F2020A27700C23579 /* Exposure.framework */; };
-		76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D412020A27700C23579 /* Nimble.framework */; };
-		76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D422020A27700C23579 /* Quick.framework */; };
 		783C8DDD24C819E00053A429 /* EnigmaDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C8DDC24C819E00053A429 /* EnigmaDownload.swift */; };
+		78701B822542A7ED00692037 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78701B812542A7ED00692037 /* Quick.framework */; };
+		78701B842542A7FE00692037 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78701B832542A7FE00692037 /* Nimble.framework */; };
 		78772DBF24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78772DBE24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift */; };
 		7889854724F5404200835C9A /* ContentKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889854624F5404200835C9A /* ContentKeyManager.swift */; };
 /* End PBXBuildFile section */
@@ -110,6 +110,11 @@
 		76A89D412020A27700C23579 /* Nimble.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nimble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D422020A27700C23579 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		783C8DDC24C819E00053A429 /* EnigmaDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnigmaDownload.swift; sourceTree = "<group>"; };
+		78701B7B2542A7D000692037 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78701B7D2542A7D000692037 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78701B7F2542A7D000692037 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78701B812542A7ED00692037 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78701B832542A7FE00692037 /* Nimble.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nimble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78772DBE24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerExposureSpec.swift; sourceTree = "<group>"; };
 		7889854624F5404200835C9A /* ContentKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentKeyManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,10 +133,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78701B842542A7FE00692037 /* Nimble.framework in Frameworks */,
+				78701B822542A7ED00692037 /* Quick.framework in Frameworks */,
 				76A89D392020A27700C23579 /* Download.framework in Frameworks */,
 				76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */,
-				76A89D3C2020A27700C23579 /* Nimble.framework in Frameworks */,
-				76A89D3D2020A27700C23579 /* Quick.framework in Frameworks */,
 				76A89CA9202082A700C23579 /* ExposureDownload.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +283,11 @@
 		76A89D342020A26800C23579 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78701B832542A7FE00692037 /* Nimble.framework */,
+				78701B812542A7ED00692037 /* Quick.framework */,
+				78701B7B2542A7D000692037 /* Quick.framework */,
+				78701B7D2542A7D000692037 /* Quick.framework */,
+				78701B7F2542A7D000692037 /* Quick.framework */,
 				76A89D3E2020A27700C23579 /* Download.framework */,
 				76A89D3F2020A27700C23579 /* Exposure.framework */,
 				76A89D402020A27700C23579 /* Mockingjay.framework */,
