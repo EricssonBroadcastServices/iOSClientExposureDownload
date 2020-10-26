@@ -1,6 +1,7 @@
 # CHANGELOG
 
- `2.2.30` Release - [2.2.30](#2230)
+* `2.2.40` Release - [2.2.40](#2240)
+* `2.2.30` Release - [2.2.30](#2230)
 * `2.2.20` Release - [2.2.20](#2220)
 * `2.2.10` Release - [2.2.10](#2210)
 * `2.2.00` Release - [2.2.00](#2200)
@@ -10,6 +11,10 @@
 * `0.78.0` Release - [0.78.0](#0780)
 * `0.77.x` Releases - [0.77.0](#0770)
 
+
+## 2.2.400
+#### Changes
+* `EMP-15234` Download sdk should not call `Delete` exposure Endpoint when deleting a downloaded asset 
 
 ## 2.2.300
 #### Changes

@@ -136,20 +136,6 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     public func removeDownloadedAsset(assetId: String, sessionToken: SessionToken, environment: Environment) {
         guard let media = getDownloadedAsset(assetId: assetId) else { return }
         delete(media: media)
-        
-        DeleteDownload(assetId: assetId, environment:environment, sessionToken: sessionToken)
-        .request()
-        .validate()
-        .response { result in
-            
-            if result.error != nil {
-                print("🚨 Deletion request to the Backend was failed. Error from Exposure : \(result.error )" )
-            } else {
-                print("✅ Pass Deletion request to the Backend was success. Message from Exposure : \(result.value )" )
-            }
-        }
-        
-        
     }
     
     internal func save(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?) {
