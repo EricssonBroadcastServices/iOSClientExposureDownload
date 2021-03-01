@@ -9,6 +9,26 @@
 import Foundation
 import Exposure
 
+
+/// Downlload state of the downloaded media
+public enum DownloadState: String, Codable {
+    
+    /// Download has started , but never completed
+    case started
+    
+    /// Download was suspended
+    case suspend
+    
+    /// Downloading was canceled
+    case cancel
+    
+    /// Download was completed
+    case completed
+    
+    /// Media has not downloaded
+    case notDownloaded
+}
+
 internal struct LocalMediaRecord: Codable {
     /// Id for the asset at `bookmarkURL`
     internal let assetId: String
@@ -21,6 +41,8 @@ internal struct LocalMediaRecord: Codable {
     
     internal let accountId: String?
     
+    internal let downloadState: DownloadState
+    
     internal init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -28,6 +50,7 @@ internal struct LocalMediaRecord: Codable {
         entitlement = try container.decodeIfPresent(PlayBackEntitlementV2.self, forKey: .entitlement)
         urlBookmark = try container.decodeIfPresent(Data.self, forKey: .urlBookmark)
         accountId = try container.decodeIfPresent(String.self, forKey: .accountId)
+        downloadState = try container.decode(DownloadState.self, forKey: .downloadState)
     }
     
     internal func encode(to encoder: Encoder) throws {
@@ -37,13 +60,15 @@ internal struct LocalMediaRecord: Codable {
         try container.encodeIfPresent(entitlement, forKey: .entitlement)
         try container.encodeIfPresent(urlBookmark, forKey: .urlBookmark)
         try container.encodeIfPresent(accountId, forKey: .accountId)
+        try container.encodeIfPresent(downloadState, forKey: .downloadState)
     }
     
-    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?) throws {
+    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?, downloadState: DownloadState) throws {
         self.assetId = assetId
         self.entitlement = entitlement
         self.urlBookmark = try location?.bookmarkData()
         self.accountId = accountId
+        self.downloadState = downloadState
     }
     
     internal enum CodingKeys: String, CodingKey {
@@ -51,5 +76,6 @@ internal struct LocalMediaRecord: Codable {
         case entitlement
         case urlBookmark
         case accountId
+        case downloadState
     }
 }

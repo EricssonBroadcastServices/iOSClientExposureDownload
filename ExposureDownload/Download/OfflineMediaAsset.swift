@@ -11,10 +11,11 @@ import AVFoundation
 import Exposure
 
 public struct OfflineMediaAsset {
-    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?) {
+    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {
         self.assetId = assetId
         self.entitlement = entitlement
         self.accountId = accountId
+        self.downloadState = downloadState
         
         if let entitlement = entitlement {
             self.fairplayRequester = ExposureDownloadFairplayRequester(entitlement: entitlement, assetId: assetId)
@@ -42,6 +43,10 @@ public struct OfflineMediaAsset {
     internal let fairplayRequester: ExposureDownloadFairplayRequester?
     
     public let accountId:String?
+    
+    
+    /// Define download state 
+    public let downloadState: DownloadState
  
     /// Retrieves the `State` of the related media *asynchronously*.
     ///

@@ -34,7 +34,8 @@ extension ContentKeyManager {
                                                     withIntermediateDirectories: false,
                                                     attributes: nil)
             } catch {
-                fatalError("Unable to create directory for content keys at path: \(contentKeyDirectory.path)")
+                print("Unable to create directory for content keys at path: \(contentKeyDirectory.path)")
+                // fatalError("Unable to create directory for content keys at path: \(contentKeyDirectory.path)")
             }
         }
         
