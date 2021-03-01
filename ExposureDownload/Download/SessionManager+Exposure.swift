@@ -99,6 +99,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
             .filter{ $0.assetId == assetId }
             .first
     }
+
     
     public func getDownloadedAssets() -> [OfflineMediaAsset] {
         guard let localMedia = localMediaRecords else { return [] }
@@ -117,6 +118,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     }
     
     public func delete(media: OfflineMediaAsset) {
+
         remove(localRecordId: media.assetId)
         do {
             try media.fairplayRequester?.deletePersistedContentKey(for: media.assetId)
@@ -138,7 +140,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
         delete(media: media)
     }
     
-    internal func save(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?) {
+    internal func save(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {
         do {
             if let currentAsset = getDownloadedAsset(assetId: assetId) {
                 if currentAsset.urlAsset?.url != nil {
@@ -151,7 +153,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
                 }
             }
             
-            let record = try LocalMediaRecord(assetId: assetId, accountId: accountId, entitlement: entitlement, completedAt: url)
+            let record = try LocalMediaRecord(assetId: assetId, accountId: accountId, entitlement: entitlement, completedAt: url, downloadState: downloadState)
             save(localRecord: record)
         }
         catch {
@@ -184,7 +186,7 @@ extension Download.SessionManager where T == ExposureDownloadTask {
     fileprivate func resolve(mediaRecord: LocalMediaRecord) -> OfflineMediaAsset {
         var bookmarkDataIsStale = false
         guard let urlBookmark = mediaRecord.urlBookmark else {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
         }
         
         do {
@@ -197,13 +199,13 @@ extension Download.SessionManager where T == ExposureDownloadTask {
              } */
             
             guard !bookmarkDataIsStale else {
-                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
+                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
             }
             
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: url)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: url, downloadState: mediaRecord.downloadState)
         }
         catch {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
         }
     }
 }

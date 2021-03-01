@@ -342,7 +342,7 @@ extension ExposureDownloadTask {
                 self.entitlement = entitlement
                 self.onEntitlementResponse(self, entitlement)
                 
-                self.sessionManager.save(assetId: assetId, accountId: self.sessionToken.accountId, entitlement: entitlement, url: nil)
+                self.sessionManager.save(assetId: assetId, accountId: self.sessionToken.accountId, entitlement: entitlement, url: nil, downloadState: .started)
                 
                 self.restoreOrCreate(for: entitlement, forceNew: !lazily, callback: callback)
         }
@@ -584,9 +584,6 @@ extension ExposureDownloadTask {
                                 let (contentKey, contentKeyUrl) = try self.onSuccessfulRetrieval(assetId: self.configuration.identifier, of: ckcBase64, for: resourceLoadingRequest)
                                 dataRequest.respond(with: contentKey)
                                 resourceLoadingRequest.finishLoading()
-                                
-                                print("SHOULD CALL ON LICENR RENEWAL ")
-                                
                                 // sendDownloadRenewed(assetId: assetIDString)
                                 
                                 self.eventPublishTransmitter.onLicenceRenewed(self, contentKeyUrl)
@@ -701,6 +698,13 @@ extension ExposureDownloadTask {
             entitlementRequest.suspend()
             eventPublishTransmitter.onSuspended(self) // TODO: Remove pause/resume functionality for entitlementreq
         }
+        
+        
+        /// Update the download state: suspend in local media record
+        let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
+        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .suspend)
+        
+       
     }
     
     public func cancel() {
@@ -711,6 +715,11 @@ extension ExposureDownloadTask {
             entitlementRequest.cancel()
             onEntitlementRequestCancelled(self)
         }
+        
+        
+        /// Update the download state: cancel in local media record
+        let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
+        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .cancel)
     }
     
     
@@ -805,10 +814,18 @@ extension ExposureDownloadTask: Download.EventPublisher {
         return self
     }
     
-    public func onCanceled(callback: @escaping (ExposureDownloadTask, URL) -> Void) -> ExposureDownloadTask {
+    public func onCanceled(callback: @escaping (ExposureDownloadTask) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onCanceled = { [weak self] task, url in
             guard let `self` = self else { return }
-            callback(task,url)
+            self.sessionManager.remove(localRecordId: task.configuration.identifier)
+            // Clean up already downloaded file from the device
+            do {
+                try FileManager.default.removeItem(at: url)
+            } catch {
+                print(error.localizedDescription )
+            }
+            
+            callback(task)
         }
         return self
     }
@@ -820,7 +837,7 @@ extension ExposureDownloadTask: Download.EventPublisher {
             // Inform the exposure backend that the download has completed
             self.sendDownloadCompleted(assetId: `self`.configuration.identifier)
             
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
             callback(task,url)
         }
         return self
@@ -829,7 +846,10 @@ extension ExposureDownloadTask: Download.EventPublisher {
     public func onError(callback: @escaping (ExposureDownloadTask, URL?, Swift.Error) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onError = { [weak self] task, url, error in
             guard let `self` = self else { return }
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
+
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .suspend)
+            
+            
             callback(task,url, error)
         }
         return self
@@ -843,7 +863,7 @@ extension ExposureDownloadTask: Download.EventPublisher {
             // Inform the exposure backend that the licence has renewed
             self.sendDownloadRenewed(assetId: `self`.configuration.identifier)
             
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
             callback(task,url)
         }
         return self

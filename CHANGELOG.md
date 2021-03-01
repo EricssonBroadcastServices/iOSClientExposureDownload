@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `2.2.50` Release - [2.2.50](#2250)
 * `2.2.40` Release - [2.2.40](#2240)
 * `2.2.30` Release - [2.2.30](#2230)
 * `2.2.20` Release - [2.2.20](#2220)
@@ -11,6 +12,10 @@
 * `0.78.0` Release - [0.78.0](#0780)
 * `0.77.x` Releases - [0.77.0](#0770)
 
+## 2.2.500
+#### Changes
+* `EMP-15755` Added download state to local media records & offlineMedia Assets
+* `EMP-15755` Clean local records when a download was cancelled
 
 ## 2.2.400
 #### Changes
