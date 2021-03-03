@@ -716,7 +716,6 @@ extension ExposureDownloadTask {
             onEntitlementRequestCancelled(self)
         }
         
-        
         /// Update the download state: cancel in local media record
         let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
         self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .cancel)
@@ -814,18 +813,19 @@ extension ExposureDownloadTask: Download.EventPublisher {
         return self
     }
     
-    public func onCanceled(callback: @escaping (ExposureDownloadTask) -> Void) -> ExposureDownloadTask {
+    public func onCanceled(callback: @escaping (ExposureDownloadTask, URL) -> Void) -> ExposureDownloadTask {
         eventPublishTransmitter.onCanceled = { [weak self] task, url in
             guard let `self` = self else { return }
             self.sessionManager.remove(localRecordId: task.configuration.identifier)
             // Clean up already downloaded file from the device
             do {
                 try FileManager.default.removeItem(at: url)
+                print("🚮 Downloaded media was successdully deleted from \(url)")
             } catch {
                 print(error.localizedDescription )
             }
             
-            callback(task)
+            callback(task, url)
         }
         return self
     }
