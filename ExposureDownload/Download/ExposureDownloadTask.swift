@@ -820,7 +820,7 @@ extension ExposureDownloadTask: Download.EventPublisher {
             // Clean up already downloaded file from the device
             do {
                 try FileManager.default.removeItem(at: url)
-                print("🚮 Downloaded media was successdully deleted from \(url)")
+                print("🚮 Downloaded media was successfully deleted from \(url)")
             } catch {
                 print(error.localizedDescription )
             }
