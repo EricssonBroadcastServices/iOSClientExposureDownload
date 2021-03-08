@@ -220,7 +220,7 @@ public final class ExposureDownloadTask: NSObject, ContentKeyManager, TaskType, 
     /// The `PlaybackEntitlement` granted for this download request.
     fileprivate(set) public var entitlement: PlayBackEntitlementV2?
     
-    internal(set) public var task: AVAssetDownloadTask?
+    internal(set) public var task: AVAggregateAssetDownloadTask?
     public var configuration: Configuration
     public var responseData: ResponseData
     public var fairplayRequester: FairplayRequester?
@@ -401,54 +401,22 @@ extension ExposureDownloadTask {
                     asset.resourceLoader.preloadsEligibleContentKeys = true
                     asset.resourceLoader.setDelegate(self, queue: DispatchQueue.main)
                     
-                    if #available(iOS 10.0, *) {
-                        guard let task = self.sessionManager
-                            .session
-                            .makeAssetDownloadTask(asset: asset,
-                                                   assetTitle: self.configuration.identifier,
-                                                   assetArtworkData: self.configuration.artwork,
-                                                   options: options) else {
-                                                    // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
-                                                    print("Error downloadSessionInvalidated")
-                                                    return
-                        }
-                        task.taskDescription = self.configuration.identifier
-                        
-                        let queue = DispatchQueue(label: self.configuration.identifier + "-offlineFairplayLoader")
-
-                        task.urlAsset
-                            .resourceLoader
-                            .setDelegate(self, queue: queue)
-                        
-                        self.sessionManager.delegate[task] = self
-                        self.eventPublishTransmitter.onPrepared(self)
-                        
+                    
+                    guard let task = self.sessionManager.session.aggregateAssetDownloadTask(with: AVURLAsset(url: url), mediaSelections: [], assetTitle: self.configuration.identifier, assetArtworkData: self.configuration.artwork, options: options) else {
+                            // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
+                            print("Error downloadSessionInvalidated")
+                        return
                     }
-                        
-                        
-                    else {
-                        guard let destination = self.responseData.destination else {
-                            //callback(nil, TaskError.failedToStartTaskWithoutDestination)
-                            print("failedToStartTaskWithoutDestination ")
-                            return
-                        }
-                        guard let task = self.sessionManager
-                            .session
-                            .makeAssetDownloadTask(asset: asset,
-                                                   destinationURL: destination,
-                                                   options: options) else {
-                                                    // This method may return nil if the URLSession has been invalidated
-                                                    
-                                                    print("downloadSessionInvalidated in else ")
-                                                    // callback(nil, TaskError.downloadSessionInvalidated)
-                                                    return
-                        }
-                        task.taskDescription = self.configuration.identifier
-                        
-                        self.sessionManager.delegate[task] = self
-                        self.eventPublishTransmitter.onPrepared(self)
-                        
-                    }
+                    
+                    task.taskDescription = self.configuration.identifier
+    
+                    let queue = DispatchQueue(label: self.configuration.identifier + "-offlineFairplayLoader")
+                    task.urlAsset
+                        .resourceLoader
+                        .setDelegate(self, queue: queue)
+                    
+                    self.sessionManager.delegate[task] = self
+                    self.eventPublishTransmitter.onPrepared(self)
                 }
                 
                 print("✅ No AVAssetDownloadTask prepared, creating new for: \(self.configuration.identifier)")
@@ -458,45 +426,22 @@ extension ExposureDownloadTask {
         
     }
     
-    private func createAndConfigureTaskForUpdate(with options: [String: Any]?, using configuration: Configuration, callback: (AVAssetDownloadTask?, TaskError?) -> Void) {
+    private func createAndConfigureTaskForUpdate(with options: [String: Any]?, using configuration: Configuration, callback: (AVAggregateAssetDownloadTask?, TaskError?) -> Void) {
         guard let url = configuration.url else {
             callback(nil, TaskError.targetUrlNotFound)
             return
         }
         
-        if #available(iOS 10.0, *) {
-            guard let task = sessionManager
-                .session
-                .makeAssetDownloadTask(asset: AVURLAsset(url: url),
-                                       assetTitle: configuration.identifier,
-                                       assetArtworkData: configuration.artwork,
-                                       options: options) else {
-                                        // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
-                                        callback(nil, TaskError.downloadSessionInvalidated)
-                                        return
-            }
-            task.taskDescription = configuration.identifier
-            configureResourceLoader(for: task)
-            callback(task,nil)
-        }
-        else {
-            guard let destination = responseData.destination else {
-                callback(nil, TaskError.failedToStartTaskWithoutDestination)
+        
+        guard let task = self.sessionManager.session.aggregateAssetDownloadTask(with: AVURLAsset(url: url), mediaSelections: [], assetTitle: self.configuration.identifier, assetArtworkData: self.configuration.artwork, options: options) else {
+                // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
+                callback(nil, TaskError.downloadSessionInvalidated)
                 return
-            }
-            guard let task = sessionManager
-                .session
-                .makeAssetDownloadTask(asset: AVURLAsset(url: url),
-                                       destinationURL: destination,
-                                       options: options) else {
-                                        // This method may return nil if the URLSession has been invalidated
-                                        callback(nil, TaskError.downloadSessionInvalidated)
-                                        return
-            }
-            task.taskDescription = configuration.identifier
-            configureResourceLoader(for: task)
-            callback(task,nil)
         }
+        
+        task.taskDescription = configuration.identifier
+        configureResourceLoader(for: task)
+        callback(task,nil)
     }
     
     
@@ -654,9 +599,9 @@ extension ExposureDownloadTask {
     @discardableResult
     public func prepare(lazily: Bool = true) -> ExposureDownloadTask {
         guard let task = task else {
+            
             if let currentAsset = sessionManager.getDownloadedAsset(assetId: configuration.identifier) {
                 prepareFrom(offlineMediaAsset: currentAsset, lazily: lazily) {
-                    
                 }
             }
             else {

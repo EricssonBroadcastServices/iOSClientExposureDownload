@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `2.2.60` Release - [2.2.60](#2260)
 * `2.2.50` Release - [2.2.50](#2250)
 * `2.2.40` Release - [2.2.40](#2240)
 * `2.2.30` Release - [2.2.30](#2230)
@@ -11,6 +12,10 @@
 * `0.79.0` Release - [0.79.0](#0790)
 * `0.78.0` Release - [0.78.0](#0780)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+## 2.2.600
+#### Bug Fixes
+* `EMP-1580` Migrate the SDK download task from `AVAssetDownloadTask` to `AVAggregateAssetDownloadTask`
 
 ## 2.2.500
 #### Changes
