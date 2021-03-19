@@ -1,2 +1,2 @@
-github "EricssonBroadcastServices/iOSClientDownload" "master"
-github "EricssonBroadcastServices/iOSClientExposure" "master"
+github "EricssonBroadcastServices/iOSClientDownload" >= 2.2.500
+github "EricssonBroadcastServices/iOSClientExposure" >= 2.2.400
