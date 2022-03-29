@@ -1,0 +1,520 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		78B401D027F34D96001581B4 /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B227F34D96001581B4 /* SWXMLHash.swift */; };
+		78B401D227F34D96001581B4 /* SWXMLHash+TypeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B327F34D96001581B4 /* SWXMLHash+TypeConversion.swift */; };
+		78B401D327F34D96001581B4 /* ExposureDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B527F34D96001581B4 /* ExposureDownloadTask.swift */; };
+		78B401D427F34D96001581B4 /* ExposureDownloadFairplayRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B627F34D96001581B4 /* ExposureDownloadFairplayRequester.swift */; };
+		78B401D527F34D96001581B4 /* ContentKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B727F34D96001581B4 /* ContentKeyManager.swift */; };
+		78B401D627F34D96001581B4 /* SessionManager+Exposure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B827F34D96001581B4 /* SessionManager+Exposure.swift */; };
+		78B401D727F34D96001581B4 /* OfflineMediaAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B927F34D96001581B4 /* OfflineMediaAsset.swift */; };
+		78B401D827F34D96001581B4 /* LocalMediaRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401BA27F34D96001581B4 /* LocalMediaRecord.swift */; };
+		78B401D927F34D96001581B4 /* DownloadCompleted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401BC27F34D96001581B4 /* DownloadCompleted.swift */; };
+		78B401DA27F34D96001581B4 /* DownloadCancelled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401BD27F34D96001581B4 /* DownloadCancelled.swift */; };
+		78B401DB27F34D96001581B4 /* Playback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401BE27F34D96001581B4 /* Playback.swift */; };
+		78B401DC27F34D96001581B4 /* Heartbeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401BF27F34D96001581B4 /* Heartbeat.swift */; };
+		78B401DD27F34D96001581B4 /* PlaybackOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C027F34D96001581B4 /* PlaybackOffset.swift */; };
+		78B401DE27F34D96001581B4 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C127F34D96001581B4 /* Error.swift */; };
+		78B401DF27F34D96001581B4 /* DownloadStarted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C227F34D96001581B4 /* DownloadStarted.swift */; };
+		78B401E027F34D96001581B4 /* DownloadResumed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C327F34D96001581B4 /* DownloadResumed.swift */; };
+		78B401E127F34D96001581B4 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C427F34D96001581B4 /* DeviceInfo.swift */; };
+		78B401E227F34D96001581B4 /* DownloadStopped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C527F34D96001581B4 /* DownloadStopped.swift */; };
+		78B401E327F34D96001581B4 /* HandshakeStarted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C627F34D96001581B4 /* HandshakeStarted.swift */; };
+		78B401E427F34D96001581B4 /* Created.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C727F34D96001581B4 /* Created.swift */; };
+		78B401E527F34D96001581B4 /* DownloadPaused.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401C827F34D96001581B4 /* DownloadPaused.swift */; };
+		78B401E627F34D96001581B4 /* DownloadFairplayRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CA27F34D96001581B4 /* DownloadFairplayRequester.swift */; };
+		78B401E727F34D96001581B4 /* ExposureDownloadAnalyticsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CB27F34D96001581B4 /* ExposureDownloadAnalyticsProvider.swift */; };
+		78B401E927F34D96001581B4 /* ExposureAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CE27F34D96001581B4 /* ExposureAnalytics.swift */; };
+		78B401EA27F34D96001581B4 /* EnigmaDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CF27F34D96001581B4 /* EnigmaDownload.swift */; };
+		78B401ED27F34D9C001581B4 /* ExposureDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 78B401EC27F34D9C001581B4 /* ExposureDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78B401F527F35273001581B4 /* iOSClientExposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B401F427F35273001581B4 /* iOSClientExposure.framework */; };
+		78B401F827F35278001581B4 /* iOSClientDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B401F727F35278001581B4 /* iOSClientDownload.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		78B401AE27F34D85001581B4 /* iOSClientExposureDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iOSClientExposureDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78B401B227F34D96001581B4 /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
+		78B401B327F34D96001581B4 /* SWXMLHash+TypeConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SWXMLHash+TypeConversion.swift"; sourceTree = "<group>"; };
+		78B401B527F34D96001581B4 /* ExposureDownloadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureDownloadTask.swift; sourceTree = "<group>"; };
+		78B401B627F34D96001581B4 /* ExposureDownloadFairplayRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureDownloadFairplayRequester.swift; sourceTree = "<group>"; };
+		78B401B727F34D96001581B4 /* ContentKeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentKeyManager.swift; sourceTree = "<group>"; };
+		78B401B827F34D96001581B4 /* SessionManager+Exposure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SessionManager+Exposure.swift"; sourceTree = "<group>"; };
+		78B401B927F34D96001581B4 /* OfflineMediaAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineMediaAsset.swift; sourceTree = "<group>"; };
+		78B401BA27F34D96001581B4 /* LocalMediaRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalMediaRecord.swift; sourceTree = "<group>"; };
+		78B401BC27F34D96001581B4 /* DownloadCompleted.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCompleted.swift; sourceTree = "<group>"; };
+		78B401BD27F34D96001581B4 /* DownloadCancelled.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCancelled.swift; sourceTree = "<group>"; };
+		78B401BE27F34D96001581B4 /* Playback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playback.swift; sourceTree = "<group>"; };
+		78B401BF27F34D96001581B4 /* Heartbeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Heartbeat.swift; sourceTree = "<group>"; };
+		78B401C027F34D96001581B4 /* PlaybackOffset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackOffset.swift; sourceTree = "<group>"; };
+		78B401C127F34D96001581B4 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		78B401C227F34D96001581B4 /* DownloadStarted.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadStarted.swift; sourceTree = "<group>"; };
+		78B401C327F34D96001581B4 /* DownloadResumed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadResumed.swift; sourceTree = "<group>"; };
+		78B401C427F34D96001581B4 /* DeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
+		78B401C527F34D96001581B4 /* DownloadStopped.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadStopped.swift; sourceTree = "<group>"; };
+		78B401C627F34D96001581B4 /* HandshakeStarted.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandshakeStarted.swift; sourceTree = "<group>"; };
+		78B401C727F34D96001581B4 /* Created.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Created.swift; sourceTree = "<group>"; };
+		78B401C827F34D96001581B4 /* DownloadPaused.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadPaused.swift; sourceTree = "<group>"; };
+		78B401CA27F34D96001581B4 /* DownloadFairplayRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadFairplayRequester.swift; sourceTree = "<group>"; };
+		78B401CB27F34D96001581B4 /* ExposureDownloadAnalyticsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureDownloadAnalyticsProvider.swift; sourceTree = "<group>"; };
+		78B401CC27F34D96001581B4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78B401CE27F34D96001581B4 /* ExposureAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExposureAnalytics.swift; sourceTree = "<group>"; };
+		78B401CF27F34D96001581B4 /* EnigmaDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnigmaDownload.swift; sourceTree = "<group>"; };
+		78B401EC27F34D9C001581B4 /* ExposureDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExposureDownload.h; sourceTree = "<group>"; };
+		78B401EE27F35233001581B4 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		78B401EF27F35248001581B4 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		78B401F027F35248001581B4 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		78B401F127F35248001581B4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		78B401F227F35248001581B4 /* UPGRADE_GUIDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UPGRADE_GUIDE.md; sourceTree = "<group>"; };
+		78B401F427F35273001581B4 /* iOSClientExposure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSClientExposure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78B401F727F35278001581B4 /* iOSClientDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSClientDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		76A89C9B202082A700C23579 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78B401F527F35273001581B4 /* iOSClientExposure.framework in Frameworks */,
+				78B401F827F35278001581B4 /* iOSClientDownload.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		76A89C95202082A700C23579 = {
+			isa = PBXGroup;
+			children = (
+				78B401EF27F35248001581B4 /* CHANGELOG.md */,
+				78B401F027F35248001581B4 /* LICENSE */,
+				78B401F127F35248001581B4 /* README.md */,
+				78B401F227F35248001581B4 /* UPGRADE_GUIDE.md */,
+				78B401EE27F35233001581B4 /* Cartfile */,
+				78B401EB27F34D9C001581B4 /* iOSClientExposureDownloadObjc */,
+				78B401AF27F34D96001581B4 /* iOSClientExposureDownload */,
+				78B401AE27F34D85001581B4 /* iOSClientExposureDownload.framework */,
+				78B401F327F35273001581B4 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		78B401AF27F34D96001581B4 /* iOSClientExposureDownload */ = {
+			isa = PBXGroup;
+			children = (
+				78B401B027F34D96001581B4 /* Dependencies */,
+				78B401B427F34D96001581B4 /* Download */,
+				78B401BB27F34D96001581B4 /* Events */,
+				78B401C927F34D96001581B4 /* Protocols */,
+				78B401CC27F34D96001581B4 /* Info.plist */,
+				78B401CD27F34D96001581B4 /* Services */,
+			);
+			name = iOSClientExposureDownload;
+			path = Sources/iOSClientExposureDownload;
+			sourceTree = "<group>";
+		};
+		78B401B027F34D96001581B4 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				78B401B127F34D96001581B4 /* SWXMLHash */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		78B401B127F34D96001581B4 /* SWXMLHash */ = {
+			isa = PBXGroup;
+			children = (
+				78B401B227F34D96001581B4 /* SWXMLHash.swift */,
+				78B401B327F34D96001581B4 /* SWXMLHash+TypeConversion.swift */,
+			);
+			path = SWXMLHash;
+			sourceTree = "<group>";
+		};
+		78B401B427F34D96001581B4 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				78B401B527F34D96001581B4 /* ExposureDownloadTask.swift */,
+				78B401B627F34D96001581B4 /* ExposureDownloadFairplayRequester.swift */,
+				78B401B727F34D96001581B4 /* ContentKeyManager.swift */,
+				78B401B827F34D96001581B4 /* SessionManager+Exposure.swift */,
+				78B401B927F34D96001581B4 /* OfflineMediaAsset.swift */,
+				78B401BA27F34D96001581B4 /* LocalMediaRecord.swift */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
+		78B401BB27F34D96001581B4 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				78B401BC27F34D96001581B4 /* DownloadCompleted.swift */,
+				78B401BD27F34D96001581B4 /* DownloadCancelled.swift */,
+				78B401BE27F34D96001581B4 /* Playback.swift */,
+				78B401BF27F34D96001581B4 /* Heartbeat.swift */,
+				78B401C027F34D96001581B4 /* PlaybackOffset.swift */,
+				78B401C127F34D96001581B4 /* Error.swift */,
+				78B401C227F34D96001581B4 /* DownloadStarted.swift */,
+				78B401C327F34D96001581B4 /* DownloadResumed.swift */,
+				78B401C427F34D96001581B4 /* DeviceInfo.swift */,
+				78B401C527F34D96001581B4 /* DownloadStopped.swift */,
+				78B401C627F34D96001581B4 /* HandshakeStarted.swift */,
+				78B401C727F34D96001581B4 /* Created.swift */,
+				78B401C827F34D96001581B4 /* DownloadPaused.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		78B401C927F34D96001581B4 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				78B401CA27F34D96001581B4 /* DownloadFairplayRequester.swift */,
+				78B401CB27F34D96001581B4 /* ExposureDownloadAnalyticsProvider.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		78B401CD27F34D96001581B4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				78B401CE27F34D96001581B4 /* ExposureAnalytics.swift */,
+				78B401CF27F34D96001581B4 /* EnigmaDownload.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		78B401EB27F34D9C001581B4 /* iOSClientExposureDownloadObjc */ = {
+			isa = PBXGroup;
+			children = (
+				78B401EC27F34D9C001581B4 /* ExposureDownload.h */,
+			);
+			name = iOSClientExposureDownloadObjc;
+			path = Sources/iOSClientExposureDownloadObjc;
+			sourceTree = "<group>";
+		};
+		78B401F327F35273001581B4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				78B401F727F35278001581B4 /* iOSClientDownload.framework */,
+				78B401F427F35273001581B4 /* iOSClientExposure.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		76A89C9C202082A700C23579 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78B401ED27F34D9C001581B4 /* ExposureDownload.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		76A89C9E202082A700C23579 /* iOSClientExposureDownload */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76A89CB3202082A700C23579 /* Build configuration list for PBXNativeTarget "iOSClientExposureDownload" */;
+			buildPhases = (
+				76A89C9A202082A700C23579 /* Sources */,
+				76A89C9B202082A700C23579 /* Frameworks */,
+				76A89C9C202082A700C23579 /* Headers */,
+				76A89C9D202082A700C23579 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSClientExposureDownload;
+			productName = ExposureDownload;
+			productReference = 78B401AE27F34D85001581B4 /* iOSClientExposureDownload.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		76A89C96202082A700C23579 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = emp;
+				TargetAttributes = {
+					76A89C9E202082A700C23579 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 76A89C99202082A700C23579 /* Build configuration list for PBXProject "iOSClientExposureDownload" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 76A89C95202082A700C23579;
+			productRefGroup = 76A89C95202082A700C23579;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				76A89C9E202082A700C23579 /* iOSClientExposureDownload */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		76A89C9D202082A700C23579 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		76A89C9A202082A700C23579 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78B401D727F34D96001581B4 /* OfflineMediaAsset.swift in Sources */,
+				78B401DA27F34D96001581B4 /* DownloadCancelled.swift in Sources */,
+				78B401E327F34D96001581B4 /* HandshakeStarted.swift in Sources */,
+				78B401DC27F34D96001581B4 /* Heartbeat.swift in Sources */,
+				78B401D927F34D96001581B4 /* DownloadCompleted.swift in Sources */,
+				78B401D027F34D96001581B4 /* SWXMLHash.swift in Sources */,
+				78B401E127F34D96001581B4 /* DeviceInfo.swift in Sources */,
+				78B401D427F34D96001581B4 /* ExposureDownloadFairplayRequester.swift in Sources */,
+				78B401E727F34D96001581B4 /* ExposureDownloadAnalyticsProvider.swift in Sources */,
+				78B401D827F34D96001581B4 /* LocalMediaRecord.swift in Sources */,
+				78B401D327F34D96001581B4 /* ExposureDownloadTask.swift in Sources */,
+				78B401D527F34D96001581B4 /* ContentKeyManager.swift in Sources */,
+				78B401DB27F34D96001581B4 /* Playback.swift in Sources */,
+				78B401E527F34D96001581B4 /* DownloadPaused.swift in Sources */,
+				78B401E427F34D96001581B4 /* Created.swift in Sources */,
+				78B401DF27F34D96001581B4 /* DownloadStarted.swift in Sources */,
+				78B401D227F34D96001581B4 /* SWXMLHash+TypeConversion.swift in Sources */,
+				78B401D627F34D96001581B4 /* SessionManager+Exposure.swift in Sources */,
+				78B401EA27F34D96001581B4 /* EnigmaDownload.swift in Sources */,
+				78B401E027F34D96001581B4 /* DownloadResumed.swift in Sources */,
+				78B401E227F34D96001581B4 /* DownloadStopped.swift in Sources */,
+				78B401DE27F34D96001581B4 /* Error.swift in Sources */,
+				78B401E927F34D96001581B4 /* ExposureAnalytics.swift in Sources */,
+				78B401E627F34D96001581B4 /* DownloadFairplayRequester.swift in Sources */,
+				78B401DD27F34D96001581B4 /* PlaybackOffset.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		76A89CB1202082A700C23579 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		76A89CB2202082A700C23579 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		76A89CB4202082A700C23579 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/iOSClientExposureDownload/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 3.0.000;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					AVfoundation,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownload;
+				PRODUCT_NAME = iOSClientExposureDownload;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		76A89CB5202082A700C23579 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/iOSClientExposureDownload/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 3.0.000;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					AVfoundation,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emp.ExposureDownload;
+				PRODUCT_NAME = iOSClientExposureDownload;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		76A89C99202082A700C23579 /* Build configuration list for PBXProject "iOSClientExposureDownload" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76A89CB1202082A700C23579 /* Debug */,
+				76A89CB2202082A700C23579 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		76A89CB3202082A700C23579 /* Build configuration list for PBXNativeTarget "iOSClientExposureDownload" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76A89CB4202082A700C23579 /* Debug */,
+				76A89CB5202082A700C23579 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 76A89C96202082A700C23579 /* Project object */;
+}
