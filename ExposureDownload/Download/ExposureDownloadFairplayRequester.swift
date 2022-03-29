@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 import Download
-import Exposure
+import iOSClientExposure
 
 /// *Exposure* specific implementation of the `OfflineFairplayRequester` protocol.
 ///

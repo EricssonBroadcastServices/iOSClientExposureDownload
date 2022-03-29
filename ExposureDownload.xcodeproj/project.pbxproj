@@ -43,14 +43,15 @@
 		76A89CE32020847D00C23579 /* Appfile in Resources */ = {isa = PBXBuildFile; fileRef = 76A89CDF2020847D00C23579 /* Appfile */; };
 		76A89CE42020847D00C23579 /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = 76A89CE02020847D00C23579 /* Fastfile */; };
 		76A89D352020A26800C23579 /* Download.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D372020A26800C23579 /* Download.framework */; };
-		76A89D362020A26800C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D382020A26800C23579 /* Exposure.framework */; };
 		76A89D392020A27700C23579 /* Download.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3E2020A27700C23579 /* Download.framework */; };
-		76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A89D3F2020A27700C23579 /* Exposure.framework */; };
 		783C8DDD24C819E00053A429 /* EnigmaDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C8DDC24C819E00053A429 /* EnigmaDownload.swift */; };
 		78701B822542A7ED00692037 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78701B812542A7ED00692037 /* Quick.framework */; };
 		78701B842542A7FE00692037 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78701B832542A7FE00692037 /* Nimble.framework */; };
 		78772DBF24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78772DBE24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift */; };
 		7889854724F5404200835C9A /* ContentKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889854624F5404200835C9A /* ContentKeyManager.swift */; };
+		78D2AF6127F2F27B006D532D /* iOSClientExposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D2AF6027F2F27B006D532D /* iOSClientExposure.framework */; };
+		78D2AF6227F2F27B006D532D /* iOSClientExposure.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 78D2AF6027F2F27B006D532D /* iOSClientExposure.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78D2AF6527F2F3CA006D532D /* iOSClientExposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D2AF6027F2F27B006D532D /* iOSClientExposure.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,20 @@
 			remoteInfo = ExposureDownload;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		78D2AF6327F2F27B006D532D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				78D2AF6227F2F27B006D532D /* iOSClientExposure.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		760800362064E8F6007F59D5 /* SWXMLHash+TypeConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SWXMLHash+TypeConversion.swift"; sourceTree = "<group>"; };
@@ -103,7 +118,6 @@
 		76A89CDF2020847D00C23579 /* Appfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
 		76A89CE02020847D00C23579 /* Fastfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		76A89D372020A26800C23579 /* Download.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Download.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		76A89D382020A26800C23579 /* Exposure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Exposure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D3E2020A27700C23579 /* Download.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Download.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D3F2020A27700C23579 /* Exposure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Exposure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76A89D402020A27700C23579 /* Mockingjay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Mockingjay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +131,7 @@
 		78701B832542A7FE00692037 /* Nimble.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nimble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78772DBE24EE9FDC0050DEE7 /* SessionManagerExposureSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerExposureSpec.swift; sourceTree = "<group>"; };
 		7889854624F5404200835C9A /* ContentKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentKeyManager.swift; sourceTree = "<group>"; };
+		78D2AF6027F2F27B006D532D /* iOSClientExposure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSClientExposure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,8 +139,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D2AF6127F2F27B006D532D /* iOSClientExposure.framework in Frameworks */,
 				76A89D352020A26800C23579 /* Download.framework in Frameworks */,
-				76A89D362020A26800C23579 /* Exposure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,8 +151,8 @@
 				78701B842542A7FE00692037 /* Nimble.framework in Frameworks */,
 				78701B822542A7ED00692037 /* Quick.framework in Frameworks */,
 				76A89D392020A27700C23579 /* Download.framework in Frameworks */,
-				76A89D3A2020A27700C23579 /* Exposure.framework in Frameworks */,
 				76A89CA9202082A700C23579 /* ExposureDownload.framework in Frameworks */,
+				78D2AF6527F2F3CA006D532D /* iOSClientExposure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +298,7 @@
 		76A89D342020A26800C23579 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78D2AF6027F2F27B006D532D /* iOSClientExposure.framework */,
 				78701B832542A7FE00692037 /* Nimble.framework */,
 				78701B812542A7ED00692037 /* Quick.framework */,
 				78701B7B2542A7D000692037 /* Quick.framework */,
@@ -294,7 +310,6 @@
 				76A89D412020A27700C23579 /* Nimble.framework */,
 				76A89D422020A27700C23579 /* Quick.framework */,
 				76A89D372020A26800C23579 /* Download.framework */,
-				76A89D382020A26800C23579 /* Exposure.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -321,6 +336,7 @@
 				76A89C9B202082A700C23579 /* Frameworks */,
 				76A89C9C202082A700C23579 /* Headers */,
 				76A89C9D202082A700C23579 /* Resources */,
+				78D2AF6327F2F27B006D532D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -586,7 +602,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JCUPRVKEC5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -596,7 +612,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 2.2.600;
+				MARKETING_VERSION = 2.3.000;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					AVfoundation,
@@ -614,7 +630,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JCUPRVKEC5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -624,7 +640,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 2.2.600;
+				MARKETING_VERSION = 2.3.000;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					AVfoundation,

@@ -8,7 +8,7 @@
 
 import Foundation
 import Download
-import Exposure
+import iOSClientExposure
 
 extension Download.SessionManager where T == ExposureDownloadTask {
     
