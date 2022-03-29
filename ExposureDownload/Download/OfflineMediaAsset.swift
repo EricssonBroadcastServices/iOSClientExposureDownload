@@ -8,7 +8,7 @@
 
 import Foundation
 import AVFoundation
-import Exposure
+import iOSClientExposure
 
 public struct OfflineMediaAsset {
     internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {

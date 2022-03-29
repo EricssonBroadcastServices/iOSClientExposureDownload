@@ -8,7 +8,7 @@
 
 import Foundation
 import Download
-import Exposure
+import iOSClientExposure
 
 /// `ExposureAnalytics` delivers a complete analytics manager fully integrated with the *EMP* system. It is an extension of the `Player` defined `AnalyticsProvider` protocol customized to fit EMP specifications.
 ///

@@ -1,2 +1,2 @@
-github "EricssonBroadcastServices/iOSClientDownload" "master"
-github "EricssonBroadcastServices/iOSClientExposure" "master"
+github "EricssonBroadcastServices/iOSClientDownload" 
+github "EricssonBroadcastServices/iOSClientExposure" ~> 3.0.0

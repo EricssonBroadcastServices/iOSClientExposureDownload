@@ -5,10 +5,10 @@
       location = "group:ExposureDownload.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Carthage/Checkouts/iOSClientDownload/Download.xcodeproj">
+      location = "group:Carthage/Checkouts/iOSClientExposure/iOSClientExposure.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Carthage/Checkouts/iOSClientExposure/Exposure.xcodeproj">
+      location = "group:Carthage/Checkouts/iOSClientDownload/Download.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Carthage/Checkouts/Quick/Quick.xcodeproj">

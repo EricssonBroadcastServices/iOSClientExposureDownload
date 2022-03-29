@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 import Download
-import Exposure
+import iOSClientExposure
 
 extension ExposureDownloadTask {
     public enum Error: Swift.Error {

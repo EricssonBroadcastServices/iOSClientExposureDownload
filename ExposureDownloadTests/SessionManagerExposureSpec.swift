@@ -7,7 +7,7 @@
 //
 import Quick
 import Nimble
-import Exposure
+import iOSClientExposure
 
 @testable import ExposureDownload
 

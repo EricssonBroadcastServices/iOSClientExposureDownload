@@ -8,7 +8,7 @@
 
 import Foundation
 import AVFoundation
-import Exposure
+import iOSClientExposure
 
 internal protocol DownloadFairplayRequester: class, ContentKeyManager {
     /// Entitlement related to this specific *Fairplay* request.
