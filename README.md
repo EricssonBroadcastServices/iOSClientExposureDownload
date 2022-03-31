@@ -56,6 +56,7 @@ CocoaPods is a dependency manager for Cocoa projects. For usage and installation
 
 ```sh
 pod 'iOSClientExposureDownload', '~>  3.0.0'
+```
 
 ### Carthage
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependency graph without interfering with your `Xcode` project setup. `CI` integration through [fastlane](https://github.com/fastlane/fastlane) is also available.
