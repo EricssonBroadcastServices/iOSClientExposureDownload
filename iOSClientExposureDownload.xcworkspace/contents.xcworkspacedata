@@ -4,10 +4,4 @@
    <FileRef
       location = "group:iOSClientExposureDownload.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/iOSClientDownload/iOSClientDownload.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/iOSClientExposure/iOSClientExposure.xcodeproj">
-   </FileRef>
 </Workspace>
