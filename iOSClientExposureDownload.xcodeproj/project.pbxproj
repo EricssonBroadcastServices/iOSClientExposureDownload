@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78A82C6C2806CFB5009D295D /* iOSClientDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78A82C6B2806CFB5009D295D /* iOSClientDownload.framework */; };
+		78A82C6E2806CFBB009D295D /* iOSClientExposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78A82C6D2806CFBB009D295D /* iOSClientExposure.framework */; };
 		78B401D027F34D96001581B4 /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B227F34D96001581B4 /* SWXMLHash.swift */; };
 		78B401D227F34D96001581B4 /* SWXMLHash+TypeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B327F34D96001581B4 /* SWXMLHash+TypeConversion.swift */; };
 		78B401D327F34D96001581B4 /* ExposureDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401B527F34D96001581B4 /* ExposureDownloadTask.swift */; };
@@ -33,11 +35,12 @@
 		78B401E927F34D96001581B4 /* ExposureAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CE27F34D96001581B4 /* ExposureAnalytics.swift */; };
 		78B401EA27F34D96001581B4 /* EnigmaDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B401CF27F34D96001581B4 /* EnigmaDownload.swift */; };
 		78B401ED27F34D9C001581B4 /* ExposureDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 78B401EC27F34D9C001581B4 /* ExposureDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78B401F527F35273001581B4 /* iOSClientExposure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B401F427F35273001581B4 /* iOSClientExposure.framework */; };
-		78B401F827F35278001581B4 /* iOSClientDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B401F727F35278001581B4 /* iOSClientDownload.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		78A82C6B2806CFB5009D295D /* iOSClientDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSClientDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A82C6D2806CFBB009D295D /* iOSClientExposure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSClientExposure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A82C6F2806D191009D295D /* iOSClientExposureDownload.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = iOSClientExposureDownload.podspec; sourceTree = "<group>"; };
 		78B401AE27F34D85001581B4 /* iOSClientExposureDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iOSClientExposureDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78B401B227F34D96001581B4 /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
 		78B401B327F34D96001581B4 /* SWXMLHash+TypeConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SWXMLHash+TypeConversion.swift"; sourceTree = "<group>"; };
@@ -80,8 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78B401F527F35273001581B4 /* iOSClientExposure.framework in Frameworks */,
-				78B401F827F35278001581B4 /* iOSClientDownload.framework in Frameworks */,
+				78A82C6E2806CFBB009D295D /* iOSClientExposure.framework in Frameworks */,
+				78A82C6C2806CFB5009D295D /* iOSClientDownload.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +99,7 @@
 				78B401F127F35248001581B4 /* README.md */,
 				78B401F227F35248001581B4 /* UPGRADE_GUIDE.md */,
 				78B401EE27F35233001581B4 /* Cartfile */,
+				78A82C6F2806D191009D295D /* iOSClientExposureDownload.podspec */,
 				78B401EB27F34D9C001581B4 /* iOSClientExposureDownloadObjc */,
 				78B401AF27F34D96001581B4 /* iOSClientExposureDownload */,
 				78B401AE27F34D85001581B4 /* iOSClientExposureDownload.framework */,
@@ -197,6 +201,8 @@
 		78B401F327F35273001581B4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78A82C6D2806CFBB009D295D /* iOSClientExposure.framework */,
+				78A82C6B2806CFB5009D295D /* iOSClientDownload.framework */,
 				78B401F727F35278001581B4 /* iOSClientDownload.framework */,
 				78B401F427F35273001581B4 /* iOSClientExposure.framework */,
 			);
@@ -445,7 +451,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 3.0.100;
+				MARKETING_VERSION = 3.0.200;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					AVfoundation,
@@ -477,7 +483,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 3.0.100;
+				MARKETING_VERSION = 3.0.200;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					AVfoundation,
