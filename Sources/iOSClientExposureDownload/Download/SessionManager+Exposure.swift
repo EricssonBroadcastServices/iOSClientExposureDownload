@@ -272,61 +272,19 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
 // MARK: - Download Info
 extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     
-    /* If you find downloadBlocked = true it means that download is not allowed. If the value is "downloadBlocked": false or not present at all it means that download is allowed.
-     */
     
-    /// Check if the Asset is available to download
+    /// Returns if an asset is available to download or not
     /// - Parameters:
     ///   - assetId: assetId
     ///   - environment: enviornment
-    ///   - availabilityKeys: availabilityKeys associated with the user
+    ///   - sessionToken: sessionToken
     ///   - completionHandler: completion
-    public func isAvailableToDownload( assetId: String, environment: Environment, availabilityKeys: [String], _ completionHandler: @escaping (Bool) -> Void) {
-        FetchAssetById(environment: environment, assetId: assetId)
-            .request()
-            .validate()
-            .response{
-                if let asset = $0.value, let publications = asset.publications {
-
-                    // Check if the any publications have the right.downloadBlocked == false or not available
-                    let publicationsWithDownloadNotBlocked = publications.filter { $0.rights?.downloadBlocked == false || $0.rights == nil }
-                    if publicationsWithDownloadNotBlocked.count == 0 { completionHandler(false) }
-                    
-                    else {
-                        
-                        /// FromDate is a Past date  & ToDate is Future Date  or  fromDate is a Past date &  ToDate is not available ==>> Should be able to download
-                        /// FromDate & ToDate is a pastDate ==> should not be able to download
-                        /// FromDate is a future date ==> Should not be available to download
-                        /// FromDate not available ==>> Should not be available to download
-                        let publicationsWithinNowTimeRange = publications.filter { ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 && Date().millisecondsSince1970 <= ($0.toDate)?.toDate()?.millisecondsSince1970 ?? 0 || ($0.fromDate)?.toDate()?.millisecondsSince1970 ?? 0 <= Date().millisecondsSince1970 }
- 
-                        if publicationsWithinNowTimeRange.count == 0 { completionHandler(false)  }
-                        
-                        else {
-                            
-                            // Check if the products in the publications are matched with user availabilityKeys
-                            let publicationsMatchedWithUserAvailabilityKeys = publicationsWithinNowTimeRange.filter ({ publication in
-                                if let products = publication.products {
-                                    let keys =  Set(products).intersection(availabilityKeys)
-                                    return !keys.isEmpty
-                                } else { return false }
-                            })
-                            
-                            if publicationsMatchedWithUserAvailabilityKeys.count == 0 { completionHandler(false )}
-                            else { completionHandler(true) }
-                            
-                        }
-                    }
-
-                } else {
-                    
-                    // If the asset is empty or publications of the asset is Empty, Asset is not allowed to download
-                    print("Error ", $0.error)
-                    completionHandler(false)
-                }
+    public func isAvailableToDownload( assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (Bool) -> Void) {
+        
+        self.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] info in
+            completionHandler( info != nil ? true : false )
         }
     }
-    
     
     /// Get downloadable info of an Asset
     /// - Parameters:
@@ -339,6 +297,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             .request()
             .validate()
             .response { info in
+                
                 if let downloadInfo = info.value {
                     completionHandler(downloadInfo)
                     

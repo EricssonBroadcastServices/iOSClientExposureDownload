@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.1.00` Release - [3.1.000](#31000)
 * `3.0.20` Release - [3.0.200](#30200)
 * `3.0.10` Release - [3.0.100](#30100)
 * `3.0.00` Release - [3.0.000](#30000)
@@ -16,6 +17,11 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+
+## 3.1.000
+#### Changes
+* Update `isAvailableToDownload` to use session token & remove `availabilitykeys` usage
 
 ## 3.0.200
 #### Changes
