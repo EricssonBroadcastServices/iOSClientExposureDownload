@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.0.1")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.1.0")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.0.1'
+pod 'iOSClientExposureDownload', '~>  3.1.0'
 ```
 
 ### Carthage
@@ -91,23 +91,12 @@ class MyTestViewController: UIViewController, EnigmaDownloadManager {
 ### Identify Downloadable Assets
 
 All assets might not be downloadable even if a customer supports download. There can be restriction of blocking downloads for a specific user.
-`ExposureDownload` provides an API (`isAvailableToDownload()`) to check if an `Asset` is available to download. But developers have to fetch `UserAvailabilityKeys` to pass , if they haven't already fetch those keys. 
+`ExposureDownload` provides an API (`isAvailableToDownload()`) to check if an `Asset` is available to download.  
 
-`Exposure`  provides an API to get the availability keys related the currently logged in user.
-
-```Swift
- GetAvailabilityKeys(environment: environment, sessionToken: session)
-    .request()
-    .validate()
-    .response { 
-        // Handle Response 
-    }
-```
-
-Then client applications can perform the download check by passing the `assetId` & the `UserAvailabilityKeys`. 
+Then client applications can perform the download check by passing the `assetId` & the `sessionToken`. 
 
 ```Swift
-    enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, availabilityKeys: availabilityKeys ) { _ in 
+    enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, sessionToken: SessionToken ) { _ in 
         // Handle Response ( true / false )
 }
 ```
