@@ -290,7 +290,7 @@ extension ExposureDownloadTask {
         configuration.url = entitlement.formats?.first?.mediaLocator
         
         sessionManager.restoreTask(with: configuration.identifier) { restoredTask in
-            
+ 
             if let restoredTask = restoredTask {
                 self.configureResourceLoader(for: restoredTask)
                 
@@ -300,10 +300,12 @@ extension ExposureDownloadTask {
                 self.handle(restoredTask: restoredTask)
             }
             else {
+ 
                 if forceNew {
                     print("✅ No AVAssetDownloadTask prepared, creating new for: \(self.configuration.identifier)")
                     // Create a fresh task
                     let options = self.configuration.requiredBitrate != nil ? [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: self.configuration.requiredBitrate!] : nil
+  
                     self.createAndConfigureTask(with: options, using: self.configuration) { urlTask, error in
                         if let error = error {
                             self.eventPublishTransmitter.onError(self, self.responseData.destination, error)
@@ -311,6 +313,7 @@ extension ExposureDownloadTask {
                         }
                         
                         if let urlTask = urlTask {
+                            
                             self.task = urlTask
                             self.sessionManager.delegate[urlTask] = self
                             print("👍 DownloadTask prepared")
@@ -383,7 +386,6 @@ extension ExposureDownloadTask {
             }
             
             guard let url = entitlement?.formats?.first?.mediaLocator  else {
-                print("Media Locator URL is missing from the entitlement ")
                 self.eventPublishTransmitter.onError(self, nil, ExposureDownloadTask.Error.fairplay(reason: .missingPlaytoken))
                 return
             }
@@ -391,8 +393,7 @@ extension ExposureDownloadTask {
             self.configuration.url = url
             
             self.sessionManager.restoreTask(with: self.configuration.identifier) { restoredTask in
-                
-                
+
                 let options = self.configuration.requiredBitrate != nil ? [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: self.configuration.requiredBitrate!] : nil
                 
                 if let url = self.configuration.url {
@@ -402,7 +403,7 @@ extension ExposureDownloadTask {
                     asset.resourceLoader.setDelegate(self, queue: DispatchQueue.main)
                     
                     
-                    guard let task = self.sessionManager.session.aggregateAssetDownloadTask(with: AVURLAsset(url: url), mediaSelections: [], assetTitle: self.configuration.identifier, assetArtworkData: self.configuration.artwork, options: options) else {
+                    guard let task = self.sessionManager.session.aggregateAssetDownloadTask(with: asset, mediaSelections: asset.allMediaSelections, assetTitle: self.configuration.identifier, assetArtworkData: self.configuration.artwork, options: options) else {
                             // This method may return nil if the AVAssetDownloadURLSession has been invalidated.
                             print("Error downloadSessionInvalidated")
                         return
@@ -503,7 +504,9 @@ extension ExposureDownloadTask {
                         
                         self.fetchContentKeyContext(licenseUrl: licenseUrl, playToken: playToken, spc: spcData) { ckcBase64, ckcError in
                             if let ckcError = ckcError {
-                                print("CKC Error",ckcError.localizedDescription, ckcError.message, ckcError.code)
+                                
+                                print("CKC Error ", ckcError.localizedDescription)
+                                
                                 resourceLoadingRequest.finishLoading(with: ckcError)
                                 self.eventPublishTransmitter.onError(self, nil, ckcError)
                                 return
