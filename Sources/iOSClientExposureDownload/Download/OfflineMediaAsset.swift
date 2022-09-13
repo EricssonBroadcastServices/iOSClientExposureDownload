@@ -11,8 +11,9 @@ import AVFoundation
 import iOSClientExposure
 
 public struct OfflineMediaAsset {
-    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {
+    internal init(assetId: String, accountId:String?, userId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {
         self.assetId = assetId
+        self.userId = userId
         self.entitlement = entitlement
         self.accountId = accountId
         self.downloadState = downloadState
@@ -44,6 +45,7 @@ public struct OfflineMediaAsset {
     
     public let accountId:String?
     
+    public let userId:String?
     
     /// Define download state 
     public let downloadState: DownloadState

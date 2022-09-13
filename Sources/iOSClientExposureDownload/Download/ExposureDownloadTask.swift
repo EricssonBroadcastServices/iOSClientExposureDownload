@@ -345,7 +345,7 @@ extension ExposureDownloadTask {
                 self.entitlement = entitlement
                 self.onEntitlementResponse(self, entitlement)
                 
-                self.sessionManager.save(assetId: assetId, accountId: self.sessionToken.accountId, entitlement: entitlement, url: nil, downloadState: .started)
+                self.sessionManager.save(assetId: assetId, accountId: self.sessionToken.accountId, userId: self.sessionToken.userId, entitlement: entitlement, url: nil, downloadState: .started)
                 
                 self.restoreOrCreate(for: entitlement, forceNew: !lazily, callback: callback)
         }
@@ -650,7 +650,7 @@ extension ExposureDownloadTask {
         
         /// Update the download state: suspend in local media record
         let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
-        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .suspend)
+        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, userId: localRecord?.userId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .suspend)
         
        
     }
@@ -666,7 +666,7 @@ extension ExposureDownloadTask {
         
         /// Update the download state: cancel in local media record
         let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
-        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .cancel)
+        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, userId: localRecord?.userId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .cancel)
     }
     
     
@@ -785,7 +785,7 @@ extension ExposureDownloadTask: iOSClientDownload.EventPublisher {
             // Inform the exposure backend that the download has completed
             self.sendDownloadCompleted(assetId: `self`.configuration.identifier)
             
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, userId: self.sessionToken.userId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
             callback(task,url)
         }
         return self
@@ -795,7 +795,7 @@ extension ExposureDownloadTask: iOSClientDownload.EventPublisher {
         eventPublishTransmitter.onError = { [weak self] task, url, error in
             guard let `self` = self else { return }
 
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .suspend)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, userId:  self.sessionToken.userId, entitlement: `self`.entitlement, url: url, downloadState: .suspend)
             
             
             callback(task,url, error)
@@ -811,7 +811,7 @@ extension ExposureDownloadTask: iOSClientDownload.EventPublisher {
             // Inform the exposure backend that the licence has renewed
             self.sendDownloadRenewed(assetId: `self`.configuration.identifier)
             
-            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
+            `self`.sessionManager.save(assetId: `self`.configuration.identifier, accountId: self.sessionToken.accountId, userId: self.sessionToken.userId, entitlement: `self`.entitlement, url: url, downloadState: .completed)
             callback(task,url)
         }
         return self

@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.2.00` Release - [3.2.000](#32000)
 * `3.1.10` Release - [3.1.100](#31100)
 * `3.1.00` Release - [3.1.000](#31000)
 * `3.0.20` Release - [3.0.200](#30200)
@@ -19,6 +20,9 @@
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
 
+## 3.2.000
+#### Features
+* `EMP-18649` Add a method to get downloadedAssets by `userId` : `enigmaDownloadManager.getDownloadedAssets(userId: _ )`
 
 ## 3.1.100
 #### Bug fixes
