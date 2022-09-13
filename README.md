@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.1.1")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.0")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.1.1'
+pod 'iOSClientExposureDownload', '~>  3.2.0'
 ```
 
 ### Carthage
@@ -191,8 +191,14 @@ If the license has expired , you need to use the `downloadTask` to refresh the l
 
 Client applications can get an `offlineMediaAsset` ( downloaded asset ) by using the `EnigmaDownloadManager`. 
 
+All downloads related to given `assetId`
 ```Swift
-    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(assetId: assetId)
+```
+
+All downloads related to given `userId`
+```Swift
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(userId: userId)
 ```
 
 Or client applications can get `AllDownloadedAssets` by using `getDownloadedAssets()`

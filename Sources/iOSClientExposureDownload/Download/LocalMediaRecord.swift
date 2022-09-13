@@ -41,6 +41,8 @@ internal struct LocalMediaRecord: Codable {
     
     internal let accountId: String?
     
+    internal let userId: String?
+    
     internal let downloadState: DownloadState
     
     internal init(from decoder: Decoder) throws {
@@ -50,6 +52,7 @@ internal struct LocalMediaRecord: Codable {
         entitlement = try container.decodeIfPresent(PlayBackEntitlementV2.self, forKey: .entitlement)
         urlBookmark = try container.decodeIfPresent(Data.self, forKey: .urlBookmark)
         accountId = try container.decodeIfPresent(String.self, forKey: .accountId)
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
         downloadState = try container.decode(DownloadState.self, forKey: .downloadState)
     }
     
@@ -60,14 +63,16 @@ internal struct LocalMediaRecord: Codable {
         try container.encodeIfPresent(entitlement, forKey: .entitlement)
         try container.encodeIfPresent(urlBookmark, forKey: .urlBookmark)
         try container.encodeIfPresent(accountId, forKey: .accountId)
+        try container.encodeIfPresent(userId, forKey: .userId)
         try container.encodeIfPresent(downloadState, forKey: .downloadState)
     }
     
-    internal init(assetId: String, accountId:String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?, downloadState: DownloadState) throws {
+    internal init(assetId: String, accountId:String?, userId: String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?, downloadState: DownloadState) throws {
         self.assetId = assetId
         self.entitlement = entitlement
         self.urlBookmark = try location?.bookmarkData()
         self.accountId = accountId
+        self.userId = userId
         self.downloadState = downloadState
     }
     
@@ -76,6 +81,7 @@ internal struct LocalMediaRecord: Codable {
         case entitlement
         case urlBookmark
         case accountId
+        case userId
         case downloadState
     }
 }
