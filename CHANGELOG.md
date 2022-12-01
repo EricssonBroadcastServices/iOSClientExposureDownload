@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.2.10` Release - [3.2.100](#32100)
 * `3.2.00` Release - [3.2.000](#32000)
 * `3.1.10` Release - [3.1.100](#31100)
 * `3.1.00` Release - [3.1.000](#31000)
@@ -19,6 +20,10 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+## 3.2.100
+#### Features
+* `EMP-18961` support latest changes from  Exposure
 
 ## 3.2.000
 #### Features
