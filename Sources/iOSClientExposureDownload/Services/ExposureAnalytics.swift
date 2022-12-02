@@ -120,7 +120,7 @@ extension ExposureAnalytics: ExposureDownloadAnalyticsProvider {
         dispatcher = Dispatcher(environment: environment,
                                 sessionToken: sessionToken,
                                 playSessionId: entitlement.playSessionId,
-                                startupEvents: events,
+                                analytics: entitlement.analytics, startupEvents: events,
                                 heartbeatsProvider: heartbeatsProvider)
         dispatcher?.flushTrigger(enabled: true)
     }
