@@ -290,7 +290,7 @@ extension ExposureDownloadTask {
         configuration.url = entitlement.formats?.first?.mediaLocator
         
         sessionManager.restoreTask(with: configuration.identifier) { restoredTask in
- 
+            
             if let restoredTask = restoredTask {
                 self.configureResourceLoader(for: restoredTask)
                 
@@ -304,8 +304,22 @@ extension ExposureDownloadTask {
                 if forceNew {
                     print("✅ No AVAssetDownloadTask prepared, creating new for: \(self.configuration.identifier)")
                     // Create a fresh task
-                    let options = self.configuration.requiredBitrate != nil ? [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: self.configuration.requiredBitrate!] : nil
-  
+                    
+                    var options = [String: Any]()
+                    
+                    // Use both bitrate & presentationSize if available
+                    if let requiredbitRate = self.configuration.requiredBitrate {
+                        if #available(iOS 14.0, *) {
+                            options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate]
+                            if let presentationSize = self.configuration.presentationSize {
+                                options = [AVAssetDownloadTaskMinimumRequiredPresentationSizeKey: presentationSize]
+                            }
+                            
+                        } else {
+                            options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate]
+                        }
+                    }
+
                     self.createAndConfigureTask(with: options, using: self.configuration) { urlTask, error in
                         if let error = error {
                             self.eventPublishTransmitter.onError(self, self.responseData.destination, error)
@@ -313,7 +327,6 @@ extension ExposureDownloadTask {
                         }
                         
                         if let urlTask = urlTask {
-                            
                             self.task = urlTask
                             self.sessionManager.delegate[urlTask] = self
                             print("👍 DownloadTask prepared")
@@ -671,10 +684,13 @@ extension ExposureDownloadTask {
     
     
     /// Download the video track with specific bitrate
-    /// - Parameter bitrate: bitrate
+    /// - Parameters:
+    ///   - bitrate: bitrate: bitrate
+    ///   - resolution: resolution: resolution of the stream
     /// - Returns: self
-    public func use(bitrate: Int64?) -> Self {
+    public func use(bitrate: Int64?, presentationSize: CGSize? = nil ) -> Self {
         self.configuration.requiredBitrate = bitrate
+        self.configuration.presentationSize = presentationSize
         return self
     }
     
