@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.2")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.3")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.2.2'
+pod 'iOSClientExposureDownload', '~>  3.2.3'
 ```
 
 ### Carthage
@@ -208,18 +208,28 @@ Or client applications can get `AllDownloadedAssets` by using `getDownloadedAsse
 ```
 
 
-Then developers can create a  `OfflineMediaPlayable` & pass it to the player to play any downloaded asset. 
+Then developers can create a  `OfflineMediaPlayable` & pass it to the player to play any downloaded asset.
+
+But there is an exception when playing downloaded mp3. AVPlayer sometimes doesn't play offline mp3 files, so the client application developers are encourage to use `AVAudioPlayer` or `AVAudioEngine` to play offline mp3 files. 
+
+check SDK Sample application for an example implementation. ( https://github.com/EricssonBroadcastServices/iOSClientSDKSampleApp )
+
+`OfflineMediaPlayable` has the attribute `format` which will pass the format of the downloaded file's format. 
 
 ```Swift
     let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
     
-    if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset {
+    if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset, let format = downloadedAsset?.format {
     
-        let offlineMediaPlayable = OfflineMediaPlayable(assetId: assetId, entitlement: entitlement, url: urlAsset.url)
+        if format == "MP3" || format == "mp3" {
+            // Create `AVAudioPlayer` or `AVAudioFile` and pass to `AVAudioEngine`
+        } else {
+    
+             let offlineMediaPlayable = OfflineMediaPlayable(assetId: assetId, entitlement: entitlement, url: urlAsset.url)
         
-        // Play downloaded asset
-        player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
-        
+               // Play downloaded asset
+            player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
+        }    
     }
 ````
 
