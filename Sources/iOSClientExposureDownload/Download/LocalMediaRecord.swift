@@ -45,6 +45,8 @@ internal struct LocalMediaRecord: Codable {
     
     internal let downloadState: DownloadState
     
+    internal let format: String?
+    
     internal init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -54,6 +56,7 @@ internal struct LocalMediaRecord: Codable {
         accountId = try container.decodeIfPresent(String.self, forKey: .accountId)
         userId = try container.decodeIfPresent(String.self, forKey: .userId)
         downloadState = try container.decode(DownloadState.self, forKey: .downloadState)
+        format = try container.decodeIfPresent(String.self, forKey: .format)
     }
     
     internal func encode(to encoder: Encoder) throws {
@@ -65,15 +68,18 @@ internal struct LocalMediaRecord: Codable {
         try container.encodeIfPresent(accountId, forKey: .accountId)
         try container.encodeIfPresent(userId, forKey: .userId)
         try container.encodeIfPresent(downloadState, forKey: .downloadState)
+        try container.encodeIfPresent(format, forKey: .format)
     }
     
-    internal init(assetId: String, accountId:String?, userId: String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?, downloadState: DownloadState) throws {
+    internal init(assetId: String, accountId:String?, userId: String?, entitlement: PlayBackEntitlementV2?, completedAt location: URL?, downloadState: DownloadState, format: String?) throws {
+
         self.assetId = assetId
         self.entitlement = entitlement
         self.urlBookmark = try location?.bookmarkData()
         self.accountId = accountId
         self.userId = userId
         self.downloadState = downloadState
+        self.format = format
     }
     
     internal enum CodingKeys: String, CodingKey {
@@ -83,5 +89,6 @@ internal struct LocalMediaRecord: Codable {
         case accountId
         case userId
         case downloadState
+        case format
     }
 }

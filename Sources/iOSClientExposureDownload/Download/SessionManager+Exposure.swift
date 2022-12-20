@@ -163,6 +163,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     internal func save(assetId: String, accountId:String?, userId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState) {
         do {
             if let currentAsset = getDownloadedAsset(assetId: assetId) {
+                
                 if currentAsset.urlAsset?.url != nil {
                     print("⚠️ There is another record for an offline asset with id: \(assetId). This data will be overwritten. The location of any downloaded media or content keys will be lost!")
                     print(" x  ",currentAsset.urlAsset?.url)
@@ -173,7 +174,8 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
                 }
             }
             
-            let record = try LocalMediaRecord(assetId: assetId, accountId: accountId, userId: userId, entitlement: entitlement, completedAt: url, downloadState: downloadState)
+            let record = try LocalMediaRecord(assetId: assetId, accountId: accountId, userId: userId, entitlement: entitlement, completedAt: url, downloadState: downloadState, format: entitlement?.formats?.first?.format ?? "HLS")
+            
             save(localRecord: record)
         }
         catch {
@@ -204,9 +206,9 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     }
     
     fileprivate func resolve(mediaRecord: LocalMediaRecord) -> OfflineMediaAsset {
-        var bookmarkDataIsStale = false
+                var bookmarkDataIsStale = false
         guard let urlBookmark = mediaRecord.urlBookmark else {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
         }
         
         do {
@@ -219,13 +221,13 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
              } */
             
             guard !bookmarkDataIsStale else {
-                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
+                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
             }
             
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: url, downloadState: mediaRecord.downloadState)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: url, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
         }
         catch {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
         }
     }
 }
@@ -262,11 +264,14 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
         var filteredLog = localMedia.filter{ $0.assetId != localRecord.assetId }
         
         filteredLog.append(localRecord)
+  
         save(mediaLog: filteredLog)
+        
         print("✅ Saved bookmark for local media record \(localRecord.assetId): ")
     }
     
     fileprivate func save(mediaLog: [LocalMediaRecord]) {
+
         do {
             let logURL = try baseDirectory()
             
