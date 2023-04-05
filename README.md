@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.3")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.4")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.2.3'
+pod 'iOSClientExposureDownload', '~>  3.2.4'
 ```
 
 ### Carthage
@@ -165,6 +165,14 @@ To download Additional Media such as audios & subtitles client applications can 
 
     // .addAudios(hlsNames: ["French", "German"])
     // .addSubtitles(hlsNames: ["French"])
+```
+
+### Downloading Specific Media 
+
+To download a specific media pass the bit rate to `downloadTask`. 
+```Swift 
+
+        task.use(bitrate: _)
 ```
 
 ### Refresh licence

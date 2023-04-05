@@ -306,17 +306,22 @@ extension ExposureDownloadTask {
                     // Create a fresh task
                     
                     var options = [String: Any]()
-                    
+           
                     // Use both bitrate & presentationSize if available
                     if let requiredbitRate = self.configuration.requiredBitrate {
                         if #available(iOS 14.0, *) {
-                            options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate]
+                            options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate, AVAssetDownloadTaskMediaSelectionPrefersMultichannelKey: false]
                             if let presentationSize = self.configuration.presentationSize {
-                                options = [AVAssetDownloadTaskMinimumRequiredPresentationSizeKey: presentationSize]
+                                options = [AVAssetDownloadTaskMinimumRequiredPresentationSizeKey: presentationSize, AVAssetDownloadTaskMediaSelectionPrefersMultichannelKey: false]
                             }
                             
                         } else {
-                            options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate]
+                            if #available(iOS 13.0, *) {
+                                options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate, AVAssetDownloadTaskMediaSelectionPrefersMultichannelKey: false]
+                            } else {
+                                options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: requiredbitRate]
+                                // Fallback on earlier versions
+                            }
                         }
                     }
 
