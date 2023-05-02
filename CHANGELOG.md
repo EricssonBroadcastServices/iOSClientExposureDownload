@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.2.50` Release - [3.2.500](#32500)
 * `3.2.40` Release - [3.2.400](#32400)
 * `3.2.30` Release - [3.2.300](#32300)
 * `3.2.20` Release - [3.2.200](#32200)
@@ -23,6 +24,11 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+## 3.2.500
+#### Bug fix
+* `EMP-19916` Use milliseconds when comparing `playTokenExpiration` and current `Date()` to pass if an offline asset is expired or not.
+
 
 ## 3.2.400
 #### Changes

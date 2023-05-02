@@ -344,7 +344,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
 
         let today = Date().millisecondsSince1970
         
-        return playTokenExpiration >= today ? false : true
+        return playTokenExpiration * 1000 >= today ? false : true
     }
     
     
