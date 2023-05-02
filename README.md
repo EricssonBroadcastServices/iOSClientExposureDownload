@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.4")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.5")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.2.4'
+pod 'iOSClientExposureDownload', '~>  3.2.5'
 ```
 
 ### Carthage
