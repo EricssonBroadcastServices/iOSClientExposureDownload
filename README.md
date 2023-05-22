@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.5")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.6")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.2.5'
+pod 'iOSClientExposureDownload', '~>  3.2.6'
 ```
 
 ### Carthage
@@ -185,12 +185,12 @@ Client applications can use `enigmaDownloadManager` check if the license for a d
 If the license has expired , you need to use the `downloadTask` to refresh the licenses.
 
 ```Swift
-    task.refreshLicence()
+    task.renewLicence()
     task.onError {_, url, error in
-        print("📱 RefreshLicence Task failed with an error: \(error)",url ?? "")
+        print("📱 RenewLicence Task failed with an error: \(error)",url ?? "")
     }
     .onCompleted { _, url in
-        print("📱 RefreshLicence Task completed: \(url)")
+        print("📱 RenewLicence Task completed: \(url)")
     }
 ```
 
