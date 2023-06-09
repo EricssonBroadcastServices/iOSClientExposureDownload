@@ -123,6 +123,65 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     
     
     
+    /// Shoud renew licenes for a given asset
+    /// - Parameters:
+    ///   - assetId: asset Id
+    ///   - sessionToken: session token
+    ///   - environment: environment
+    ///   - completion: completion
+    public func renewLicense(assetId: String, sessionToken: SessionToken, environment: Environment, completion: @escaping (OfflineMediaAsset?, Error?) -> Void) {
+        
+            guard let media = getDownloadedAsset(assetId: assetId) else {
+                print("❌ Could not find local media for renewal: assetId \(assetId)")
+                let error = ExposureDownloadTask.Error.fairplay(reason: .missingApplicationCertificateUrl)
+                completion(nil, error)
+                return
+            }
+            
+            self.validateEntitlementRequest(environment: environment, sessionToken: sessionToken, assetId: assetId) {  [weak self] newEntitlement, error in
+                
+                if let error = error {
+                    print("❌ Entitlement granted failed for assetId: \(assetId) , Error \(error)")
+                    completion(nil, error )
+                } else {
+                    print("✅ New entitlement was granted for assetId : \(assetId)")
+                    do {
+                        if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                            var updatedLocalRecord = localRecord
+                            updatedLocalRecord.entitlement = newEntitlement
+                            self?.save(localRecord: updatedLocalRecord)
+      
+                            let offlineAsset = OfflineMediaAsset(assetId: assetId, accountId: sessionToken.accountId, userId: sessionToken.userId, entitlement: newEntitlement, url: try media.fairplayRequester?.contentKeyUrl(for: assetId), downloadState: .completed, format: media.format)
+                            completion(offlineAsset, nil )
+                        }
+                    } catch {
+                        print("❌ Updating local record with new entitlement was failed for assetId : \(assetId) , Error \(error)")
+                        completion(nil, error)
+                    }
+                }
+            }
+    }
+    
+    
+    fileprivate func validateEntitlementRequest(environment:Environment,sessionToken:SessionToken, assetId: String, completionHandler: @escaping (PlayBackEntitlementV2?, ExposureError?) -> Void) {
+        
+        let _ = Entitlement(environment:environment,
+                                         sessionToken: sessionToken)
+            .validate(downloadId: assetId)
+            .request()
+            .validate()
+            .response {
+                guard let entitlement = $0.value else {
+                    
+                    // self.eventPublishTransmitter.onError(self, nil, $0.error!)
+                    
+                    completionHandler(nil, $0.error)
+                    return
+                }
+                completionHandler(entitlement, nil )
+        }
+    }
+    
     /// Get downloaded Assets by `userId`
     /// - Parameter userId: userId
     /// - Returns: array of OfflineMediaAsset
@@ -186,6 +245,23 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
 
 // MARK: - LocalMediaRecord
 extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
+    
+    /// Get local media record for a given `assetId`
+    func getLocalMediaRecordFor(assetId: String) -> LocalMediaRecord? {
+        do {
+            let logFile = try logFileURL()
+            let logData = try Data(contentsOf: logFile)
+            print("Reading...  📖: \(logFile.description)")
+            let localMedia = try JSONDecoder().decode([LocalMediaRecord].self, from: logData)
+            let filteredLog = localMedia.filter{ $0.assetId == assetId }.first
+            return filteredLog
+        } catch {
+            print("🚨 Error fetching local media : \(error)")
+            return nil
+        }
+        
+    }
+    
     fileprivate var localMediaRecords: [LocalMediaRecord]? {
         do {
             let logFile = try logFileURL()
@@ -256,6 +332,17 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
 
 // MARK: Save / Remove
 extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
+    
+    /// This method will update `LocalMediaLog` with given updated `localRecord`
+    fileprivate func update(localRecord: LocalMediaRecord) {
+        var localMedia = localMediaRecords ?? []
+        let filteredLog = localMedia.filter{ $0.assetId == localRecord.assetId }.first
+        localMedia.removeAll(where: {$0.assetId == filteredLog?.assetId })
+        localMedia.append(localRecord)
+  
+        save(mediaLog: localMedia)
+        print("✅ Update bookmark for local media record \(localRecord.assetId): ")
+    }
     
     /// This method will ensure `LocalMediaLog` has a unique list of downloads with respect to `assetId`
     fileprivate func save(localRecord: LocalMediaRecord) {
