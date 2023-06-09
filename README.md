@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.2.6")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.3.0")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.2.6'
+pod 'iOSClientExposureDownload', '~>  3.3.0'
 ```
 
 ### Carthage
@@ -175,23 +175,20 @@ To download a specific media pass the bit rate to `downloadTask`.
         task.use(bitrate: _)
 ```
 
-### Refresh licence
+### Renew licence
 Client applications can use `enigmaDownloadManager` check if the license for a download asset has expired by passing the `assetId`
 
 ```Swift
     enigmaDownloadManager.isExpired(assetId: asset.assetId) // true / false 
 ```
 
-If the license has expired , you need to use the `downloadTask` to refresh the licenses.
+If the license has expired , you can renew the licenses by using below api. 
 
 ```Swift
-    task.renewLicence()
-    task.onError {_, url, error in
-        print("📱 RenewLicence Task failed with an error: \(error)",url ?? "")
-    }
-    .onCompleted { _, url in
-        print("📱 RenewLicence Task completed: \(url)")
-    }
+    let _ = enigmaDownloadManager.renewLicense(assetId: assetId, sessionToken: session, environment: environment) { offlineMediaAsset, error in 
+    // print("Updated offline media asset \(offlineMediaAsset)")
+ }
+                
 ```
 
 

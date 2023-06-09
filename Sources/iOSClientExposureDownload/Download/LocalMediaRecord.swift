@@ -34,7 +34,7 @@ internal struct LocalMediaRecord: Codable {
     internal let assetId: String
     
     /// Related entitlement
-    internal let entitlement: PlayBackEntitlementV2?
+    internal var entitlement: PlayBackEntitlementV2?
     
     /// URL encoded as bookmark data
     internal let urlBookmark: Data?

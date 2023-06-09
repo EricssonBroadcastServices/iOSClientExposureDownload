@@ -726,8 +726,8 @@ extension ExposureDownloadTask {
     }
     
     
-    
     /// Refresh fairplay licences
+    @available(*, deprecated, message: "Do not use this : use `enigmaDownloadManager.renewLicense(assetId:_, sessionToken: _, environment: _)` instead")
     public func renewLicence() {
         guard let downloadTask = task else {
             guard let entitlementRequest = entitlementRequest else {

@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.3.0` Release - [3.3.0](#330)
 * `3.2.6` Release - [3.2.6](#326)
 * `3.2.50` Release - [3.2.500](#32500)
 * `3.2.40` Release - [3.2.400](#32400)
@@ -25,6 +26,12 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+
+## 3.3.0
+#### Bug fixes & Changes
+* `EMP-20054` Bug fix : Entitlement become nil after renewal of licences. 
+* `EMP-20054` Added a new API for renew licences of licences & depricated the old API. Use new API `enigmaDownloadManager.renewLicense(assetId: assetId, sessionToken: session, environment: environment) { offlineMediaAsset, error in ... }`
 
 ## 3.2.6
 #### Changes
