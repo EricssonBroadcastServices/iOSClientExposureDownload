@@ -152,12 +152,29 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
                             self?.save(localRecord: updatedLocalRecord)
       
                             let offlineAsset = OfflineMediaAsset(assetId: assetId, accountId: sessionToken.accountId, userId: sessionToken.userId, entitlement: newEntitlement, url: try media.fairplayRequester?.contentKeyUrl(for: assetId), downloadState: .completed, format: media.format)
+                            self?.sendDownloadRenewed(assetId: assetId, environment:environment, sessionToken: sessionToken )
                             completion(offlineAsset, nil )
                         }
                     } catch {
                         print("❌ Updating local record with new entitlement was failed for assetId : \(assetId) , Error \(error)")
                         completion(nil, error)
                     }
+                }
+            }
+    }
+    
+    /// Send download renewal completion to the exposure
+    /// - Parameter assetId: assetId
+    internal func sendDownloadRenewed(assetId: String, environment: Environment, sessionToken: SessionToken) {
+        SendDownloadRenewed(assetId: assetId, environment: environment, sessionToken: sessionToken)
+            .request()
+            .validate()
+            .response { result in
+                if result.error != nil {
+                    // Ignore any errors , keep the downloaded media
+                    print("🚨 DownloadRenewed request to the Backend was failed. Error from Exposure : \(result.error )" )
+                } else {
+                    print("✅ DownloadRenewed request to the Backend was success. Message from Exposure : \(result.value )" )
                 }
             }
     }
