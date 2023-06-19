@@ -13,8 +13,11 @@ import iOSClientExposure
 /// Downlload state of the downloaded media
 public enum DownloadState: String, Codable {
     
-    /// Download has started , but never completed
+    /// Download has started
     case started
+    
+    /// Download in progress.
+    case downloading
     
     /// Download was suspended
     case suspend

@@ -653,6 +653,10 @@ extension ExposureDownloadTask {
         }
         downloadTask.resume()
         eventPublishTransmitter.onResumed(self)
+        
+        /// Update the download state: downloading in local media record
+        let localRecord = self.sessionManager.getDownloadedAsset(assetId: configuration.identifier)
+        self.sessionManager.save(assetId: configuration.identifier, accountId: localRecord?.accountId, userId: localRecord?.userId, entitlement: localRecord?.entitlement, url: localRecord?.urlAsset?.url ?? nil, downloadState: .downloading)
     }
     
     public func suspend() {

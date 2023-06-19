@@ -140,19 +140,22 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             self.validateEntitlementRequest(environment: environment, sessionToken: sessionToken, assetId: assetId) {  [weak self] newEntitlement, error in
                 
+                guard let `self` = self else {
+                    completion(nil, nil )
+                    return }
                 if let error = error {
                     print("❌ Entitlement granted failed for assetId: \(assetId) , Error \(error)")
                     completion(nil, error )
                 } else {
                     print("✅ New entitlement was granted for assetId : \(assetId)")
                     do {
-                        if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                        if let localRecord = self.getLocalMediaRecordFor(assetId: assetId) {
                             var updatedLocalRecord = localRecord
                             updatedLocalRecord.entitlement = newEntitlement
-                            self?.save(localRecord: updatedLocalRecord)
+                            self.save(localRecord: updatedLocalRecord)
       
-                            let offlineAsset = OfflineMediaAsset(assetId: assetId, accountId: sessionToken.accountId, userId: sessionToken.userId, entitlement: newEntitlement, url: try media.fairplayRequester?.contentKeyUrl(for: assetId), downloadState: .completed, format: media.format)
-                            self?.sendDownloadRenewed(assetId: assetId, environment:environment, sessionToken: sessionToken )
+                            let offlineAsset = OfflineMediaAsset(assetId: assetId, accountId: sessionToken.accountId, userId: sessionToken.userId, entitlement: newEntitlement, url: try media.fairplayRequester?.contentKeyUrl(for: assetId), downloadState: .completed, format: media.format, sessionManager: self)
+                            self.sendDownloadRenewed(assetId: assetId, environment:environment, sessionToken: sessionToken )
                             completion(offlineAsset, nil )
                         }
                     } catch {
@@ -279,7 +282,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
         
     }
     
-    fileprivate var localMediaRecords: [LocalMediaRecord]? {
+    var localMediaRecords: [LocalMediaRecord]? {
         do {
             let logFile = try logFileURL()
             
@@ -301,7 +304,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     fileprivate func resolve(mediaRecord: LocalMediaRecord) -> OfflineMediaAsset {
                 var bookmarkDataIsStale = false
         guard let urlBookmark = mediaRecord.urlBookmark else {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format, sessionManager: self)
         }
         
         do {
@@ -314,13 +317,13 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
              } */
             
             guard !bookmarkDataIsStale else {
-                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
+                return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format, sessionManager: self)
             }
             
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: url, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: url, downloadState: mediaRecord.downloadState, format: mediaRecord.format, sessionManager: self)
         }
         catch {
-            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format)
+            return OfflineMediaAsset(assetId: mediaRecord.assetId, accountId: mediaRecord.accountId, userId: mediaRecord.userId, entitlement: mediaRecord.entitlement, url: nil, downloadState: mediaRecord.downloadState, format: mediaRecord.format, sessionManager: self)
         }
     }
 }

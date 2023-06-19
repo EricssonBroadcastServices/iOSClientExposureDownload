@@ -9,15 +9,20 @@
 import Foundation
 import AVFoundation
 import iOSClientExposure
+import iOSClientDownload
 
 public struct OfflineMediaAsset {
-    internal init(assetId: String, accountId:String?, userId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState, format:String?) {
+    
+    public let sessionManager: iOSClientDownload.SessionManager<ExposureDownloadTask>
+    
+    internal init(assetId: String, accountId:String?, userId:String?, entitlement: PlayBackEntitlementV2?, url: URL?, downloadState: DownloadState, format:String?, sessionManager: iOSClientDownload.SessionManager<ExposureDownloadTask>) {
         self.assetId = assetId
         self.userId = userId
         self.entitlement = entitlement
         self.accountId = accountId
         self.downloadState = downloadState
         self.format = format
+        self.sessionManager = sessionManager
         
         if let entitlement = entitlement {
             self.fairplayRequester = ExposureDownloadFairplayRequester(entitlement: entitlement, assetId: assetId)
@@ -53,8 +58,9 @@ public struct OfflineMediaAsset {
     /// Define download state 
     public let downloadState: DownloadState
  
-    /// Retrieves the `State` of the related media *asynchronously*.
-    ///
+    
+    /// Retrieves the `State` of the related media *asynchronously*. This will indicate if the `OfflineMediaAsset` is `Playable : completed ` or `notPlayable : Not a complete download`
+     ///
     /// An asset is only `.playable` if it has an associated `PlaybackEntitlementV2` and a valid `url` to the locally stored media files. If either of these criteria are not met, the asset is `.notPlayable`. Not playable assets should be considered damaged and candidates for removal.
     public func state(callback: @escaping (State) -> Void) {
         guard let entitlement = entitlement else {
@@ -93,6 +99,15 @@ public struct OfflineMediaAsset {
                 }
             }
         }
+    }
+    
+    
+    /// Get the download state of an `OfflineMediaAsset`
+    /// - Returns: DownloadState : :started / downloading / suspend / cancel / completed / notDownloaded
+    public func getDownloadState() -> DownloadState? {
+        let localMedia = sessionManager.localMediaRecords ?? []
+        let filteredLog = localMedia.filter{ $0.assetId == assetId }.first
+        return filteredLog?.downloadState
     }
     
     /// The state of the `OfflineMediaAsset`
