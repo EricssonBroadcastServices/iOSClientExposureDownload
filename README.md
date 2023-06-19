@@ -47,7 +47,7 @@ Once you have your Swift package set up, adding `iOSClientExposureDownload` as a
 
 ```sh
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.3.1")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.4.0")
 ]
 ```
 
@@ -55,7 +55,7 @@ dependencies: [
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```sh
-pod 'iOSClientExposureDownload', '~>  3.3.1'
+pod 'iOSClientExposureDownload', '~>  3.4.0'
 ```
 
 ### Carthage
@@ -245,6 +245,41 @@ To delete a downloaded asset, developer can use `removeDownloadedAsset(assetId:)
 
 ```Swift
     let _ = enigmaDownloadManager.removeDownloadedAsset(assetId: assetId)
+```
+
+### State of a downloaded Asset
+
+Client applications can get the download state of an `offlineMediaAsset` ( downloaded asset ) by using the `getDownloadState()`.
+
+```Swift
+    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+    let downloadState = downloadedAsset.getDownloadState()
+    
+    switch downloadState {
+        case .completed:
+            // completed 
+        case .cancel:
+            // canceled 
+        case .notDownloaded:
+            // not downloaded 
+        case.suspend:
+            // suspended  
+        case .started:
+           // download has started 
+        case .downloading:
+           // In some cases `offlineMediaAsset` can have the state of `downloading` even when there is no ongoing active download task. 
+           // In this case, it is recommended to check the playable state of the `offlineMediaAsset`
+            
+            let _ = downloadedAsset.state { playableState in
+                switch playableState {
+                case .completed(entitlement: let entitlement, url: let url):
+                    self.downloadState = .downloaded
+                case .notPlayable(entitlement: let entitlement, url: _):
+                    self.downloadState = .suspended
+                }
+                
+            }
+        }
 ```
 
 

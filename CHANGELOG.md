@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.4.0` Release - [3.4.0](#340)
 * `3.3.1` Release - [3.3.1](#331)
 * `3.3.0` Release - [3.3.0](#330)
 * `3.2.6` Release - [3.2.6](#326)
@@ -28,6 +29,11 @@
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
 
+
+## 3.4.0
+#### Bug fixes & Changes 
+* `EMP-19813` Bug fix : `OfflineMediaAsset` has a wrong state
+* `EMP-19813` With this version `DownloadState` has a new state `downloading` & added a new API to fetch the state of an `OfflineMediaAsset` : `getDownloadState()`
 
 ## 3.3.1
 #### Changes
