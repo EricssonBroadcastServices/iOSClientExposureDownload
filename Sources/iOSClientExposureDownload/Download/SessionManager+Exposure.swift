@@ -440,26 +440,97 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     }
     
     
-    /// Check if the license has expired or not
+    /// Check if the downloaded Asset has expired or not
     /// - Parameter assetId: asset id
     /// - Returns: true if the license has expired
-    public func isExpired(assetId: String)-> Bool {
+    public func isExpired(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Bool) -> Void) {
         let downloadedAsset = getDownloadedAsset(assetId: assetId)
-        guard let playTokenExpiration = downloadedAsset?.entitlement?.playTokenExpiration else {
-            return true
+        
+        // Get download verified information
+        self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo in
+            let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+            let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+            
+            if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                completionHandler(result.1)
+            } else {
+                
+                // Calculation failed or did not return , assume downloaded asset is expired
+                completionHandler(true)
+            }
         }
+    }
 
+    
+    /// Get the downloaded Asset's expiration time
+    /// - Parameter assetId: asset id
+    /// - Returns: playTokenExpiration
+    public func getExpiryTime(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Int64?) -> Void) {
+        let downloadedAsset = getDownloadedAsset(assetId: assetId)
+     
+        // Get download verified information
+        self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo in
+            let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+            let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+            
+            if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                completionHandler(result.0)
+            } else {
+                // Calculation failed or did not return , assume downloaded asset is expired
+                completionHandler(nil)
+            }
+        }
+    }
+    
+    /// Take the `publicationEndDateInMiliseconds` & `playTokenExpirationInSeconds` and calucalte if an Downloaded Asset is Expired or not
+    /// - Parameters:
+    ///   - publicationEndDateInMiliseconds: publication End Date In Miliseconds
+    ///   - playTokenExpirationInSeconds: playTokenExpiration In Seconds
+    /// - Returns: expiryTime & isExpired: true/false
+    fileprivate func calculateExpiry(publicationEndDateInMiliseconds: Int64? , playTokenExpirationInSeconds: Int?) -> (Int64? , Bool) {
+        
+        // Today
         let today = Date().millisecondsSince1970
         
-        return playTokenExpiration * 1000 >= today ? false : true
+        if let publicationEndDateInMiliseconds = publicationEndDateInMiliseconds , let playTokenExpirationInSeconds = playTokenExpirationInSeconds {
+            let playTokenExpirationInMiliseconds = playTokenExpirationInSeconds * 1000
+            
+            let smallest = min(publicationEndDateInMiliseconds, Int64(playTokenExpirationInMiliseconds))
+            
+            // Check if the smallest is bigger than current day
+            if smallest >= today {
+                // Download is not expired
+                return(smallest, false)
+            } else {
+                // Download is expired
+                return(smallest, true)
+            }
+        } else {
+            // No publication End time or playTokenExpiration was found. Assume Dwonload is expired
+            return(nil, true)
+        }
     }
     
     
-    /// get the license expiration time
-    /// - Parameter assetId: asset id
-    /// - Returns: playTokenExpiration
-    public func getExpiryTime(assetId: String)->Int? {
-        let downloadedAsset = getDownloadedAsset(assetId: assetId)
-        return downloadedAsset?.entitlement?.playTokenExpiration
+    /// Get download verified information
+    /// - Parameters:
+    ///   - assetId: assetId
+    ///   - environment: Exposure Enviornment
+    ///   - sessionToken: user sessionToken
+    ///   - completionHandler: completion
+    private func getDownloadVerified(assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (DownloadVerified?) -> Void) {
+        
+        GetDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken)
+            .request()
+            .validate()
+            .response { info in
+                
+                if let downloadVerified = info.value {
+                    completionHandler(downloadVerified)
+                } else {
+                    print(" Error " , info.error )
+                    completionHandler(nil)
+                }
+        }
     }
 }
