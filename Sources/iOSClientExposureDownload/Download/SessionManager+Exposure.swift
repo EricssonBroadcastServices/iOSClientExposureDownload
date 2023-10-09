@@ -453,27 +453,28 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             // Get download verified information
             self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
                 
-                var downloadEntitlement = downloadedAsset?.entitlement
-                downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
-    
-                // Update the local media record with the updated publication end date
-                if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
-                    var updatedLocalRecord = localRecord
-                    updatedLocalRecord.entitlement = downloadEntitlement
-                    self?.save(localRecord: updatedLocalRecord)
-                }
-                
-                let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
-                let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
-                
-                if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
-                    completionHandler(result.1, error)
+                // If any error, pass it
+                if let error = error {
+                    completionHandler(nil, error)
                 } else {
-                    // Calculation failed or did not return , assume downloaded asset is expired
-                    completionHandler(true, error)
+                    var downloadEntitlement = downloadedAsset?.entitlement
+                    downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
+        
+                    // Update the local media record with the updated publication end date
+                    if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                        var updatedLocalRecord = localRecord
+                        updatedLocalRecord.entitlement = downloadEntitlement
+                        self?.save(localRecord: updatedLocalRecord)
+                    }
+                    
+                    let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+                    let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+                    
+                    if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                        completionHandler(result.1, error)
+                    }
                 }
             }
-            
         } else {
             // No Internet connection found, use locally stored value to calculate the expiry Time
             let publicationEndInMiliseconds = downloadedAsset?.entitlement?.publicationEnd?.toDate()?.millisecondsSince1970
@@ -483,7 +484,9 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
             let noInternetError = ExposureError.generalError(error: error)
-            completionHandler(nil, noInternetError)
+            
+            // pass the locally calculated value & the noInternetError
+            completionHandler(result.1, noInternetError)
         }
 
     }
@@ -501,27 +504,28 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             // Get download verified information
             self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
                 
-                var downloadEntitlement = downloadedAsset?.entitlement
-                downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
-    
-                // Update the local media record with the updated publication end date
-                if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
-                    var updatedLocalRecord = localRecord
-                    updatedLocalRecord.entitlement = downloadEntitlement
-                    self?.save(localRecord: updatedLocalRecord)
-                }
-                
-                let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
-                let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
-                
-                if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
-                    completionHandler(result.0, error)
-                } else {
-                    // Calculation failed or did not return , assume downloaded asset is expired
+                // If any error, pass it
+                if let error = error {
                     completionHandler(nil, error)
+                } else {
+                    var downloadEntitlement = downloadedAsset?.entitlement
+                    downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
+        
+                    // Update the local media record with the updated publication end date
+                    if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                        var updatedLocalRecord = localRecord
+                        updatedLocalRecord.entitlement = downloadEntitlement
+                        self?.save(localRecord: updatedLocalRecord)
+                    }
+                    
+                    let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+                    let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+                    
+                    if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                        completionHandler(result.0, error)
+                    }
                 }
             }
-            
         } else {
             // No Internet connection found, use locally stored value to calculate the expiry Time
             let publicationEndInMiliseconds = downloadedAsset?.entitlement?.publicationEnd?.toDate()?.millisecondsSince1970
@@ -531,7 +535,9 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
             let noInternetError = ExposureError.generalError(error: error)
-            completionHandler(nil, noInternetError)
+            
+            // pass the locally calculated value & the noInternetError
+            completionHandler(result.0, noInternetError)
         }
     }
     
