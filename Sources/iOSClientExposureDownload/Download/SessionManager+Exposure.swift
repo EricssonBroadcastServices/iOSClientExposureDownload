@@ -443,15 +443,15 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     
     /// Check if the downloaded Asset has expired or not
     /// - Parameter assetId: asset id
-    /// - Returns: true if the license has expired
-    public func isExpired(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Bool) -> Void) {
+    /// - Returns: true if the license has expired / error if any
+    public func isExpired(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Bool?, ExposureError?) -> Void) {
         let downloadedAsset = getDownloadedAsset(assetId: assetId)
         
         if self.isConnectedToNetwork() {
             // Internet connection found
             
             // Get download verified information
-            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo in
+            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
                 
                 var downloadEntitlement = downloadedAsset?.entitlement
                 downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
@@ -467,10 +467,10 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
                 let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
                 
                 if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
-                    completionHandler(result.1)
+                    completionHandler(result.1, error)
                 } else {
                     // Calculation failed or did not return , assume downloaded asset is expired
-                    completionHandler(true)
+                    completionHandler(true, error)
                 }
             }
             
@@ -481,7 +481,9 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             let result = self.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds)
             
-            completionHandler(result.1)
+            let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
+            let noInternetError = ExposureError.generalError(error: error)
+            completionHandler(nil, noInternetError)
         }
 
     }
@@ -489,15 +491,15 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     
     /// Get the downloaded Asset's expiration time
     /// - Parameter assetId: asset id
-    /// - Returns: playTokenExpiration
-    public func getExpiryTime(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Int64?) -> Void) {
+    /// - Returns: playTokenExpiration  / error if any
+    public func getExpiryTime(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Int64?, ExposureError? ) -> Void) {
         let downloadedAsset = getDownloadedAsset(assetId: assetId)
      
         if self.isConnectedToNetwork() {
             // Internet connection found
             
             // Get download verified information
-            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo in
+            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
                 
                 var downloadEntitlement = downloadedAsset?.entitlement
                 downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
@@ -513,10 +515,10 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
                 let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
                 
                 if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
-                    completionHandler(result.0)
+                    completionHandler(result.0, error)
                 } else {
                     // Calculation failed or did not return , assume downloaded asset is expired
-                    completionHandler(nil)
+                    completionHandler(nil, error)
                 }
             }
             
@@ -527,7 +529,9 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             let result = self.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds)
             
-            completionHandler(result.0)
+            let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
+            let noInternetError = ExposureError.generalError(error: error)
+            completionHandler(nil, noInternetError)
         }
     }
     
@@ -566,18 +570,18 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     ///   - assetId: assetId
     ///   - environment: Exposure Enviornment
     ///   - sessionToken: user sessionToken
-    ///   - completionHandler: completion
-    private func getDownloadVerified(assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (DownloadVerified?) -> Void) {
+    ///   - completionHandler: download verified info /  error if any
+    private func getDownloadVerified(assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (DownloadVerified?, ExposureError?) -> Void) {
         
         GetDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken)
             .request()
             .validate()
-            .response { info in
+            .response { result in
                 
-                if let downloadVerified = info.value {
-                    completionHandler(downloadVerified)
+                if let downloadVerified = result.value {
+                    completionHandler(downloadVerified, nil )
                 } else {
-                    completionHandler(nil)
+                    completionHandler(nil, result.error)
                 }
         }
     }
