@@ -9,6 +9,7 @@
 import Foundation
 import iOSClientDownload
 import iOSClientExposure
+import SystemConfiguration
 
 extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     
@@ -440,26 +441,187 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
     }
     
     
-    /// Check if the license has expired or not
+    /// Check if the downloaded Asset has expired or not
     /// - Parameter assetId: asset id
-    /// - Returns: true if the license has expired
-    public func isExpired(assetId: String)-> Bool {
+    /// - Returns: true if the license has expired / error if any
+    public func isExpired(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Bool?, ExposureError?) -> Void) {
         let downloadedAsset = getDownloadedAsset(assetId: assetId)
-        guard let playTokenExpiration = downloadedAsset?.entitlement?.playTokenExpiration else {
-            return true
+        
+        if self.isConnectedToNetwork() {
+            // Internet connection found
+            
+            // Get download verified information
+            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
+                
+                // If any error, pass it
+                if let error = error {
+                    completionHandler(nil, error)
+                } else {
+                    var downloadEntitlement = downloadedAsset?.entitlement
+                    downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
+        
+                    // Update the local media record with the updated publication end date
+                    if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                        var updatedLocalRecord = localRecord
+                        updatedLocalRecord.entitlement = downloadEntitlement
+                        self?.save(localRecord: updatedLocalRecord)
+                    }
+                    
+                    let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+                    let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+                    
+                    if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                        completionHandler(result.1, error)
+                    }
+                }
+            }
+        } else {
+            // No Internet connection found, use locally stored value to calculate the expiry Time
+            let publicationEndInMiliseconds = downloadedAsset?.entitlement?.publicationEnd?.toDate()?.millisecondsSince1970
+            let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+            
+            let result = self.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds)
+            
+            let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
+            let noInternetError = ExposureError.generalError(error: error)
+            
+            // pass the locally calculated value & the noInternetError
+            completionHandler(result.1, noInternetError)
         }
 
+    }
+
+    
+    /// Get the downloaded Asset's expiration time
+    /// - Parameter assetId: asset id
+    /// - Returns: playTokenExpiration  / error if any
+    public func getExpiryTime(assetId: String, environment: Environment, sessionToken: SessionToken, completionHandler: @escaping (Int64?, ExposureError? ) -> Void) {
+        let downloadedAsset = getDownloadedAsset(assetId: assetId)
+     
+        if self.isConnectedToNetwork() {
+            // Internet connection found
+            
+            // Get download verified information
+            self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
+                
+                // If any error, pass it
+                if let error = error {
+                    completionHandler(nil, error)
+                } else {
+                    var downloadEntitlement = downloadedAsset?.entitlement
+                    downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
+        
+                    // Update the local media record with the updated publication end date
+                    if let localRecord = self?.getLocalMediaRecordFor(assetId: assetId) {
+                        var updatedLocalRecord = localRecord
+                        updatedLocalRecord.entitlement = downloadEntitlement
+                        self?.save(localRecord: updatedLocalRecord)
+                    }
+                    
+                    let publicationEndInMiliseconds = verifiedInfo?.publicationEnd.toDate()?.millisecondsSince1970
+                    let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+                    
+                    if let result = self?.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds) {
+                        completionHandler(result.0, error)
+                    }
+                }
+            }
+        } else {
+            // No Internet connection found, use locally stored value to calculate the expiry Time
+            let publicationEndInMiliseconds = downloadedAsset?.entitlement?.publicationEnd?.toDate()?.millisecondsSince1970
+            let playTokenExpirationInSeconds = downloadedAsset?.entitlement?.playTokenExpiration
+            
+            let result = self.calculateExpiry(publicationEndDateInMiliseconds: publicationEndInMiliseconds, playTokenExpirationInSeconds: playTokenExpirationInSeconds)
+            
+            let error = NSError(domain: "No internet connection", code: 404, userInfo: nil)
+            let noInternetError = ExposureError.generalError(error: error)
+            
+            // pass the locally calculated value & the noInternetError
+            completionHandler(result.0, noInternetError)
+        }
+    }
+    
+    /// Take the `publicationEndDateInMiliseconds` & `playTokenExpirationInSeconds` and calucalte if an Downloaded Asset is Expired or not
+    /// - Parameters:
+    ///   - publicationEndDateInMiliseconds: publication End Date In Miliseconds
+    ///   - playTokenExpirationInSeconds: playTokenExpiration In Seconds
+    /// - Returns: expiryTime & isExpired: true/false
+    fileprivate func calculateExpiry(publicationEndDateInMiliseconds: Int64? , playTokenExpirationInSeconds: Int?) -> (Int64? , Bool) {
+        
+        // Today
         let today = Date().millisecondsSince1970
         
-        return playTokenExpiration * 1000 >= today ? false : true
+        if let publicationEndDateInMiliseconds = publicationEndDateInMiliseconds , let playTokenExpirationInSeconds = playTokenExpirationInSeconds {
+            let playTokenExpirationInMiliseconds = playTokenExpirationInSeconds * 1000
+            
+            let smallest = min(publicationEndDateInMiliseconds, Int64(playTokenExpirationInMiliseconds))
+            
+            // Check if the smallest is bigger than current day
+            if smallest >= today {
+                // Download is not expired
+                return(smallest, false)
+            } else {
+                // Download is expired
+                return(smallest, true)
+            }
+        } else {
+            // No publication End time or playTokenExpiration was found. Assume Dwonload is expired
+            return(nil, true)
+        }
     }
     
     
-    /// get the license expiration time
-    /// - Parameter assetId: asset id
-    /// - Returns: playTokenExpiration
-    public func getExpiryTime(assetId: String)->Int? {
-        let downloadedAsset = getDownloadedAsset(assetId: assetId)
-        return downloadedAsset?.entitlement?.playTokenExpiration
+    /// Get download verified information
+    /// - Parameters:
+    ///   - assetId: assetId
+    ///   - environment: Exposure Enviornment
+    ///   - sessionToken: user sessionToken
+    ///   - completionHandler: download verified info /  error if any
+    private func getDownloadVerified(assetId: String, environment: Environment, sessionToken: SessionToken, _ completionHandler: @escaping (DownloadVerified?, ExposureError?) -> Void) {
+        
+        GetDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken)
+            .request()
+            .validate()
+            .response { result in
+                
+                if let downloadVerified = result.value {
+                    completionHandler(downloadVerified, nil )
+                } else {
+                    completionHandler(nil, result.error)
+                }
+        }
+    }
+}
+
+// MARK: Network reachability
+extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
+    
+    /// Check network connectivity
+    /// - Returns: true / false
+    internal func isConnectedToNetwork() -> Bool {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
+
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        if flags.isEmpty {
+            return false
+        }
+
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+
+        return (isReachable && !needsConnection)
     }
 }

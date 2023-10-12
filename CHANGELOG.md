@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.5.0` Release - [3.5.0](#350)
 * `3.4.0` Release - [3.4.0](#340)
 * `3.3.1` Release - [3.3.1](#331)
 * `3.3.0` Release - [3.3.0](#330)
@@ -28,6 +29,10 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+## 3.5.0
+#### Changes 
+* `EMP-19813` Use `publicationEnd` value when caluclating `isExpired` or `getExpiryTime` , for downloaded assets. SDK will use `downloadverified` end point to fetch `publicationEnd` value if there is an internet connection. 
 
 
 ## 3.4.0

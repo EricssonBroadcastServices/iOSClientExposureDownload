@@ -1,305 +1,312 @@
-[![Swift](https://img.shields.io/badge/Swift-5.x-orange?style=flat-square)](https://img.shields.io/badge/Swift-5.3_5.4_5.5-Orange?style=flat-square)
-[![Platforms](https://img.shields.io/badge/Platforms-iOS_tvOS-yellowgreen?style=flat-square)](https://img.shields.io/badge/Platforms-macOS_iOS_tvOS_watchOS_Linux_Windows-Green?style=flat-square)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Alamofire.svg?style=flat-square)](https://img.shields.io/cocoapods/v/Alamofire.svg)
-[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
-[![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)
-
-
 # Exposure Download
 
-* [Features](#features)
-* [License](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/LICENSE)
-* [Requirements](#requirements)
-* [Installation](#installation)
+![Swift Version](https://img.shields.io/badge/Swift-5.x-orange?style=flat-square)
+![Platform](https://img.shields.io/badge/Platforms-iOS_tvOS-yellowgreen?style=flat-square)
+![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Alamofire.svg?style=flat-square)
+![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)
+![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)
 
-* Usage
-    - [Downloading Assets](#downloading-assets)
-    - [Identify Downloadable Assets](#identify-downloadable-assets)
-    - [Playback of a downloaded Asset](#playback-of-a-downloaded-asset)
-    - [Deleting downloaded Asset](#deleting-downloaded-asset)
-    - [Fairplay Integration](#fairplay-integration)
-    - [Error Handling](#error-handling)
-* [Release Notes](#release-notes)
-* [Upgrade Guides](#upgrade-guides)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Downloading Assets](#downloading-assets)
+  - [Identify Downloadable Assets](#identify-downloadable-assets)
+  - [Playback of a Downloaded Asset](#playback-of-a-downloaded-asset)
+  - [Deleting Downloaded Asset](#deleting-downloaded-asset)
+  - [Fairplay Integration](#fairplay-integration)
+  - [Error Handling](#error-handling)
+- [Release Notes](#release-notes)
+- [Upgrade Guides](#upgrade-guides)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
 
 ## Features
 
-- [x] Download through *Exposure*
-- [x] Playback of Downloaded Assets
+- Download through *Exposure*
+- Playback of Downloaded Assets
 
 ## Requirements
 
-* `iOS` 11.0+ (`FairPlay` requires `iOS` 10.0+)
-* `Swift` 5.0+
-* `Xcode` 10.2+
+- iOS 11.0+ (FairPlay requires iOS 10.0+)
+- Swift 5.0+
+- Xcode 10.2+
 
-* Framework dependencies
-    - [`Download`](https://github.com/EricssonBroadcastServices/iOSClientDownload)
-    - [`Exposure`](https://github.com/EricssonBroadcastServices/iOSClientExposure)
-    - Exact versions described in [Cartfile](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/Cartfile)
+Framework dependencies:
+- [Download](https://github.com/EricssonBroadcastServices/iOSClientDownload)
+- [Exposure](https://github.com/EricssonBroadcastServices/iOSClientExposure)
+- Exact versions described in [Cartfile](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/Cartfile)
 
 ## Installation
 
-The Swift Package Manager is a tool for automating the distribution of Swift code and is integrated into the swift compiler.
-Once you have your Swift package set up, adding `iOSClientExposureDownload` as a dependency is as easy as adding it to the dependencies value of your Package.swift.
+The Swift Package Manager is a tool for automating the distribution of Swift code and is integrated into the swift compiler. Once you have your Swift package set up, adding `iOSClientExposureDownload` as a dependency is as easy as adding it to the dependencies value of your Package.swift.
 
-```sh
+```swift
 dependencies: [
-    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.4.0")
+    .package(url: "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload", from: "3.5.0")
 ]
 ```
 
 ### CocoaPods
+
 CocoaPods is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `iOSClientExposureDownload` into your Xcode project using CocoaPods, specify it in your Podfile:
 
-```sh
-pod 'iOSClientExposureDownload', '~>  3.4.0'
+```ruby
+pod 'iOSClientExposureDownload', '~>  3.5.0'
 ```
 
 ### Carthage
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependency graph without interfering with your `Xcode` project setup. `CI` integration through [fastlane](https://github.com/fastlane/fastlane) is also available.
 
-Install *Carthage* through [Homebrew](https://brew.sh) by performing the following commands:
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependency graph without interfering with your Xcode project setup. CI integration through [fastlane](https://github.com/fastlane/fastlane) is also available.
 
-```sh
+Install Carthage through Homebrew by performing the following commands:
+
+```bash
 $ brew update
 $ brew install carthage
 ```
 
-Once *Carthage* has been installed, you need to create a `Cartfile` which specifies your dependencies. Please consult the [artifacts](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md) documentation for in-depth information about `Cartfile`s and the other artifacts created by *Carthage*.
+Once Carthage has been installed, you need to create a Cartfile that specifies your dependencies. Please consult the [artifacts](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md) documentation for in-depth information about Cartfiles and the other artifacts created by Carthage.
 
-```sh
+```swift
 github "EricssonBroadcastServices/iOSClientExposureDownload"
 ```
 
-Running `carthage update` will fetch your dependencies and place them in `/Carthage/Checkouts`. You either build the `.framework`s and drag them in your `Xcode` or attach the fetched projects to your `Xcode workspace`.
+Running `carthage update` will fetch your dependencies and place them in /Carthage/Checkouts. You can then build the .framework files and drag them into your Xcode project or attach the fetched projects to your Xcode workspace.
 
-Finally, make sure you add the `.framework`s to your targets *General -> Embedded Binaries* section.
+Finally, make sure to add the .framework files to your target's General -> Embedded Binaries section.
 
 ## Usage
 
-Client applications can use the `ExpoureDownload` by  confirming `EnigmaDownloadManager` to any class 
+Client applications can use the `ExpoureDownload` by confirming `EnigmaDownloadManager` to any class:
 
-```Swift
+```swift
 class MyTestViewController: UIViewController, EnigmaDownloadManager {
-    // After confirming client applications can use `enigmaDownloadManager` instance to perform any download related tasks.
+    // After confirming, client applications can use the `enigmaDownloadManager` instance to perform any download-related tasks.
 }
 ```
 
 ### Identify Downloadable Assets
 
-All assets might not be downloadable even if a customer supports download. There can be restriction of blocking downloads for a specific user.
-`ExposureDownload` provides an API (`isAvailableToDownload()`) to check if an `Asset` is available to download.  
+All assets might not be downloadable even if a customer supports download. There can be a restriction on blocking downloads for a specific user. `ExposureDownload` provides an API (`isAvailableToDownload()`) to check if an `Asset` is available to download. Client applications can perform the download check by passing the `assetId` and the `sessionToken`.
 
-Then client applications can perform the download check by passing the `assetId` & the `sessionToken`. 
-
-```Swift
-    enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, sessionToken: SessionToken ) { _ in 
-        // Handle Response ( true / false )
+```swift
+enigmaDownloadManager.isAvailableToDownload(assetId: assetId, environment: environment, sessionToken: SessionToken) { _ in 
+    // Handle Response (true / false)
 }
 ```
 
-### Identify what can be downloaded for a specific asset
+### Identify What Can be Downloaded for a Specific Asset
 
-When a user select an actually downloadable asset `ExposureDownload` provides an option to check what can be downloadable for that asset. ( `audios` , `videos` , `subtitles` )
-```Swift
-    enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session) { downloadInfo in
-        /// Handle Response 
-        /// downloadInfo.audios , downloadInfo.videos,  downloadInfo.subtitles
-    }
+When a user selects an actually downloadable asset, `ExposureDownload` provides an option to check what can be downloadable for that asset (audios, videos, subtitles).
+
+```swift
+enigmaDownloadManager.getDownloadableInfo(assetId: assetId, environment: environment, sessionToken: session) { downloadInfo in
+    // Handle Response
+    // downloadInfo.audios, downloadInfo.videos, downloadInfo.subtitles
+}
 ```
 
 ### Downloading Assets
 
-To download an `Asset` client applications can create a `downloadTask` by passing the `assetId` .   Task can be `prepare` & `resume` to start downloading the asset.
-`task.suspend()` will temporary suspend the downloading task. Suspended task can be `resume`.  
-`task.cancel()`  will cancel the task. 
+To download an `Asset`, client applications can create a `downloadTask` by passing the `assetId`. The task can be prepared and resumed to start downloading the asset. Tasks can be suspended and canceled.
 
-```Swift
-    let task = enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
-    task.prepare()
-    task.resume()
-    task.suspend()
-    task.cancel()
-    
+```swift
+let task = enigmaDownloadManager.download(assetId: assetId, using: session, in: environment)
+task.prepare()
+task.resume()
+task.suspend()
+task.cancel()
 ```
 
-`downloadTask` publishes several events that the client applications can listen to. 
+`downloadTask` publishes several events that the client applications can listen to.
 
-```Swift 
-
-    task.onPrepared { _ in
-        print("📱 Media Download prepared ")
-        // task.resume()
-    }
-    .onCanceled { task, url in
-        print("📱 Media Download canceled",task.configuration.identifier,url)
-    }
-    
-    .onSuspended { _ in
-        print("📱 Media Download Suspended")
-    }
-    .onResumed { _ in
-        print("📱 Media Download Resumed")
-        
-    }
-    .onProgress { _, progress in
-        print("📱 Percent", progress.current*100,"%")
-    }
-    .onError {_, url, error in
-        print("📱 Download error: \(error)")
-    }
-    .onCompleted { _, url in
-        print("📱 Download completed: \(url)")
-    }
+```swift
+task.onPrepared { _ in
+    print("📱 Media Download prepared")
+    // task.resume()
+}
+.onCanceled { task, url in
+    print("📱 Media Download canceled", task.configuration.identifier, url)
+}
+.onSuspended { _ in
+    print("📱 Media Download Suspended")
+}
+.onResumed { _ in
+    print("📱 Media Download Resumed")
+}
+.onProgress { _, progress in
+    print("📱 Percent", progress.current * 100, "%")
+}
+.onError { _, url, error in
+    print("📱 Download error: \(error)")
+}
+.onCompleted { _, url in
+    print("📱 Download completed: \(url)")
+}
 ```
 
 ### Downloading Additional Media
 
-To download Additional Media such as audios & subtitles client applications can use the same   `downloadTask`. 
-```Swift 
+To download additional media such as audios and subtitles, client applications can use the same `downloadTask`.
 
-    task.addAllAdditionalMedia() // will download all aditional media 
-
-    // .addAudios(hlsNames: ["French", "German"])
-    // .addSubtitles(hlsNames: ["French"])
+```swift
+task.addAllAdditionalMedia() // will download all additional media
 ```
 
-### Downloading Specific Media 
+### Downloading Specific Media
 
-To download a specific media pass the bit rate to `downloadTask`. 
-```Swift 
+To download a specific media, pass the bit rate to `downloadTask`.
 
-        task.use(bitrate: _)
+```swift
+task.use(bitrate: _)
 ```
 
-### Renew licence
-Client applications can use `enigmaDownloadManager` check if the license for a download asset has expired by passing the `assetId`
+### Check if Downloaded Asset has Expired
 
-```Swift
-    enigmaDownloadManager.isExpired(assetId: asset.assetId) // true / false 
-```
+Client applications can check if a downloaded asset has expired using the `isExpired` method provided by the `enigmaDownloadManager`. This method allows client applications to determine whether a downloaded asset has expired. The method
 
-If the license has expired , you can renew the licenses by using below api. 
+If there is an internet connection , SDK will try to fetch the download asset's publicationEnd value from `downloadverified` and compare it with the `playTokenExpiration` & use the smallest value, Then compares the samllest with `Date()` (Today)
+ to check if an asset is expired or not. 
 
-```Swift
-    let _ = enigmaDownloadManager.renewLicense(assetId: assetId, sessionToken: session, environment: environment) { offlineMediaAsset, error in 
-    // print("Updated offline media asset \(offlineMediaAsset)")
- }
-                
-```
-
-
-### Playback of a downloaded Asset
-
-Client applications can get an `offlineMediaAsset` ( downloaded asset ) by using the `EnigmaDownloadManager`. 
-
-All downloads related to given `assetId`
-```Swift
-    let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(assetId: assetId)
-```
-
-All downloads related to given `userId`
-```Swift
-    let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(userId: userId)
-```
-
-Or client applications can get `AllDownloadedAssets` by using `getDownloadedAssets()`
-
-```Swift
-    let allDownloadedAssets = enigmaDownloadManager.getDownloadedAssets()
-```
-
-
-Then developers can create a  `OfflineMediaPlayable` & pass it to the player to play any downloaded asset.
-
-But there is an exception when playing downloaded mp3. AVPlayer sometimes doesn't play offline mp3 files, so the client application developers are encourage to use `AVAudioPlayer` or `AVAudioEngine` to play offline mp3 files. 
-
-check SDK Sample application for an example implementation. ( https://github.com/EricssonBroadcastServices/iOSClientSDKSampleApp )
-
-`OfflineMediaPlayable` has the attribute `format` which will pass the format of the downloaded file's format. 
-
-```Swift
-    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
-    
-    if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset, let format = downloadedAsset?.format {
-    
-        if format == "MP3" || format == "mp3" {
-            // Create `AVAudioPlayer` or `AVAudioFile` and pass to `AVAudioEngine`
+```swift
+enigmaDownloadManager.isExpired(assetId: asset.assetId, environment: environment, sessionToken: session) { expired, error in 
+    if let error = error {
+        // Handle the error, e.g., network issue or authentication problem
+        print("Error: \(error.localizedDescription)")
+    } else {
+        // Handle the expiration status
+        if expired {
+            print("Asset has expired.")
+            // Perform actions for an expired asset
         } else {
-    
-             let offlineMediaPlayable = OfflineMediaPlayable(assetId: assetId, entitlement: entitlement, url: urlAsset.url)
-        
-               // Play downloaded asset
-            player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
-        }    
+            print("Asset is still valid.")
+            // Perform actions for a valid asset
+        }
     }
-````
-
-
-### Deleting downloaded Asset
-
-To delete a downloaded asset, developer can use `removeDownloadedAsset(assetId:)`
-
-```Swift
-    let _ = enigmaDownloadManager.removeDownloadedAsset(assetId: assetId)
+}
 ```
 
-### State of a downloaded Asset
+Client developers can also fetch the `expiryTime` of a downloaded asset using `getExpiryTime(assetId: String, environment: Environment, sessionToken: SessionToken)`.
 
-Client applications can get the download state of an `offlineMediaAsset` ( downloaded asset ) by using the `getDownloadState()`.
+```swift
+enigmaDownloadManager.getExpiryTime(assetId: asset.assetId, environment: environment, sessionToken: session) { expiryTime, error in 
+    // expiryTime
+}
+```
 
-```Swift
-    let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
-    let downloadState = downloadedAsset.getDownloadState()
-    
-    switch downloadState {
-        case .completed:
-            // completed 
-        case .cancel:
-            // canceled 
-        case .notDownloaded:
-            // not downloaded 
-        case.suspend:
-            // suspended  
-        case .started:
-           // download has started 
-        case .downloading:
-           // In some cases `offlineMediaAsset` can have the state of `downloading` even when there is no ongoing active download task. 
-           // In this case, it is recommended to check the playable state of the `offlineMediaAsset`
-            
-            let _ = downloadedAsset.state { playableState in
-                switch playableState {
+### Renew License
+
+If the license has expired, you can renew the licenses by using the following API:
+
+```swift
+let _ = enigmaDownloadManager.renewLicense(assetId: assetId, sessionToken: session, environment: environment) { offlineMediaAsset, error in 
+    // print("Updated offline media asset \(offlineMediaAsset)")
+}
+```
+
+### Playback of a Downloaded Asset
+
+Client applications can get an `offlineMediaAsset` (downloaded asset) by using the `EnigmaDownloadManager`.
+
+To get all downloads related to a given `assetId`:
+
+```swift
+let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(assetId: assetId)
+```
+
+To get all downloads related to a given `userId`:
+
+```swift
+let downloadedAsset = enigmaDownloadManager.getDownloadedAssets(userId: userId)
+```
+
+Or client applications can get `AllDownloadedAssets` by using `getDownloadedAssets()`.
+
+```swift
+let allDownloadedAssets = enigmaDownloadManager.getDownloadedAssets()
+```
+
+Then developers can create an `OfflineMediaPlayable` and pass it to the player to play any downloaded asset. However, when playing downloaded MP3 files, AVPlayer sometimes doesn't work. In such cases, client application developers are encouraged to use AVAudioPlayer or AVAudioEngine to play offline MP3 files. Check the SDK Sample application for an example implementation (https://github.com/EricssonBroadcastServices/iOSClientSDKSampleApp).
+
+`OfflineMediaPlayable` has the attribute `format` that will pass the format of the downloaded file.
+
+```swift
+let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+
+if let entitlement = downloadedAsset?.entitlement, let urlAsset = downloadedAsset?.urlAsset, let format = downloadedAsset?.format {
+
+    if format == "MP3" || format == "mp3" {
+        // Create `AVAudioPlayer` or `AVAudioFile` and pass to `AVAudioEngine`
+    } else {
+        let offlineMediaPlayable = OfflineMediaPlayable(assetId: assetId, entitlement: entitlement, url: urlAsset.url)
+        
+        // Play downloaded asset
+        player.startPlayback(offlineMediaPlayable: offlineMediaPlayable)
+    }
+}
+```
+
+### Deleting Downloaded Asset
+
+To delete a downloaded asset, developers can use `removeDownloadedAsset(assetId:)`.
+
+```swift
+let _ = enigmaDownloadManager.removeDownloadedAsset(assetId: assetId)
+```
+
+### State of a Downloaded Asset
+
+Client applications can get the download state of an `offlineMediaAsset` (downloaded asset) by using the `getDownloadState()`.
+
+```swift
+let downloadedAsset = enigmaDownloadManager.getDownloadedAsset(assetId: assetId)
+let downloadState = downloadedAsset.getDownloadState()
+
+switch downloadState {
+    case .completed:
+        // Completed 
+    case .cancel:
+        // Canceled 
+    case .notDownloaded:
+        // Not downloaded 
+    case .suspend:
+        // Suspended 
+    case .started:
+        // Download has started 
+    case .downloading:
+        // In some cases, `offlineMediaAsset` can have the state of `downloading` even when there is no ongoing active download task. 
+        // In this case, it is recommended to check the playable state of the `offlineMediaAsset`
+
+        let _ = downloadedAsset.state { playableState in
+            switch playableState {
                 case .completed(entitlement: let entitlement, url: let url):
                     self.downloadState = .downloaded
                 case .notPlayable(entitlement: let entitlement, url: _):
                     self.downloadState = .suspended
-                }
-                
             }
         }
+}
 ```
-
 
 ### Fairplay Integration
 
-SDK provides an out of the box implementation for downloading FairPlay protected assets. Client applications can create a `downloadTask` & start downloading. SDK will download the relevent FairPlay licences & keys and will use them when you are trying to play a FairPlay protected downloaded asset using  [`ExposurePlayBack`]
-
+SDK provides an out-of-the-box implementation for downloading FairPlay protected assets. Client applications can create a `downloadTask` and start downloading. SDK will download the relevant FairPlay licenses and keys and will use them when you are trying to play a FairPlay protected downloaded asset using `ExposurePlayBack`.
 
 ## Release Notes
-Release specific changes can be found in the [CHANGELOG](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/CHANGELOG.md).
+
+Release-specific changes can be found in the [CHANGELOG](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/CHANGELOG.md).
 
 ## Upgrade Guides
-The procedure to apply when upgrading from one version to another depends on what solution your client application has chosen to integrate `Exposure`.
 
-Major changes between releases will be documented with special [Upgrade Guides](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/UPGRADE_GUIDE.md).
-
-### Carthage
-Updating your dependencies is done by running  `carthage update` with the relevant *options*, such as `--use-submodules`, depending on your project setup. For more information regarding dependency management with `Carthage` please consult their [documentation](https://github.com/Carthage/Carthage/blob/master/README.md) or run `carthage help`.
+The procedure to apply when upgrading from one version to another depends on what solution your client application has chosen to integrate `Exposure`. Major changes between releases will be documented with special [Upgrade Guides](https://github.com/EricssonBroadcastServices/iOSClientExposureDownload/blob/master/UPGRADE_GUIDE.md).
 
 ## Roadmap
-No formalised roadmap has yet been established but an extensive backlog of possible items exist. The following represent an unordered *wish list* and is subject to change.
+
+No formalized roadmap has yet been established but an extensive backlog of possible items exist. The following represent an unordered *wish list* and is subject to change.
 
 ## Contributing
+```
+```
