@@ -8,12 +8,13 @@
 import Quick
 import Nimble
 import iOSClientExposure
+import iOSClientDownload
 import Foundation
 
 @testable import iOSClientExposureDownload
 
 class SessionManagerExposureSpec: QuickSpec, EnigmaDownloadManager {
-    
+
     override func spec() {
         super.spec()
         
@@ -46,7 +47,11 @@ class SessionManagerExposureSpec: QuickSpec, EnigmaDownloadManager {
         
         
         let entitlement = json.decode(PlayBackEntitlementV2.self)
-        let downloadedAsset = OfflineMediaAsset(assetId: "assetId", accountId: "accountId", userId: "userId",  entitlement: entitlement, url: URL(string: "fileURL"), downloadState: .completed, format: "")
+        
+        let manager = iOSClientDownload.SessionManager<ExposureDownloadTask>()
+    
+        
+        let downloadedAsset = OfflineMediaAsset(assetId: "assetId", accountId: "accountId", userId: "userId",  entitlement: entitlement, url: URL(string: "fileURL"), downloadState: .completed, format: "", sessionManager: manager)
     
             
          describe("OfflineMedia Assets") {
