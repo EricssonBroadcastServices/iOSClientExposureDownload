@@ -455,7 +455,13 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
                 
                 // If any error, pass it
                 if let error = error {
-                    completionHandler(nil, error)
+                    // Consider any 403 error as download expired
+                    if error.code == 403 {
+                        completionHandler(true, error)
+                    }
+                    else {
+                        completionHandler(nil, error)
+                    }
                 } else {
                     var downloadEntitlement = downloadedAsset?.entitlement
                     downloadEntitlement?.publicationEnd = verifiedInfo?.publicationEnd
@@ -503,7 +509,7 @@ extension iOSClientDownload.SessionManager where T == ExposureDownloadTask {
             
             // Get download verified information
             self.getDownloadVerified(assetId: assetId, environment: environment, sessionToken: sessionToken) { [weak self] verifiedInfo, error in
-                
+                 
                 // If any error, pass it
                 if let error = error {
                     completionHandler(nil, error)
