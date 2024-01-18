@@ -1,5 +1,7 @@
 # CHANGELOG
 
+* `3.5.3` Release - [3.5.3](#353)
+* `3.5.2` Release - [3.5.2](#352)
 * `3.5.1` Release - [3.5.1](#351)
 * `3.5.0` Release - [3.5.0](#350)
 * `3.4.0` Release - [3.4.0](#340)
@@ -30,6 +32,19 @@
 * `0.79.0` Release - [0.79.00](#07900)
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
+
+
+## 3.5.3
+#### Changes 
+* Update dependencies 
+
+## 3.5.2
+#### Changes 
+* Update dependencies 
+
+## 3.5.1
+#### Changes 
+* `EMP-21037` Treat 403 response to entitlement/downloadverified as offline asset has expired
 
 ## 3.5.1
 #### Changes 
