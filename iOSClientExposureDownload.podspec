@@ -11,4 +11,5 @@ spec.source       = { :git => "https://github.com/EricssonBroadcastServices/iOSC
 spec.source_files  = "Sources/iOSClientExposureDownload/**/*.swift"
 spec.dependency 'iOSClientExposure', '~>  3.5.0'
 spec.dependency 'iOSClientDownload', '~>  3.0.3'
+spec.resource_bundles = { "iOSClientExposureDownload.git" => ["Sources/iOSClientExposureDownload/PrivacyInfo.xcprivacy"] }
 end
