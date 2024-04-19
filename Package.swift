@@ -45,10 +45,6 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [.copy("PrivacyInfo.xcprivacy")]
         ),
-        .target(
-            name: "iOSClientExposureDownloadObjc",
-            dependencies: []
-        ),
         .testTarget(
             name: "iOSClientExposureDownloadTests",
             dependencies: [
