@@ -9,7 +9,7 @@ spec.documentation_url = "README.md"
 spec.platforms = { :ios => "12.0" }
 spec.source       = { :git => "https://github.com/EricssonBroadcastServices/iOSClientExposureDownload.git", :tag => "v#{spec.version}" }
 spec.source_files  = "Sources/iOSClientExposureDownload/**/*.swift"
-spec.dependency 'iOSClientExposure', '~>  3.5.0'
-spec.dependency 'iOSClientDownload', '~>  3.0.3'
+spec.dependency 'iOSClientExposure', '~>  3.8.0'
+spec.dependency 'iOSClientDownload', '~>  3.1.0'
 spec.resource_bundles = { "iOSClientExposureDownload.git" => ["Sources/iOSClientExposureDownload/PrivacyInfo.xcprivacy"] }
 end

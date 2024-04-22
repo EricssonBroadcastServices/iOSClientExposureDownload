@@ -18,11 +18,11 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(
             url: "https://github.com/EricssonBroadcastServices/iOSClientExposure",
-            from: "3.5.0"
+            from: "3.8.0"
         ),
         .package(
             url: "https://github.com/EricssonBroadcastServices/iOSClientDownload",
-            from: "3.0.3"
+            from: "3.1.0"
         ),
         .package(
             url: "https://github.com/Quick/Quick.git",
