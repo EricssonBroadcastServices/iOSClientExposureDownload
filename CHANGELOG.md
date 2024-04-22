@@ -1,5 +1,6 @@
 # CHANGELOG
 
+* `3.6.0` Release - [3.6.0](#360)
 * `3.5.3` Release - [3.5.3](#353)
 * `3.5.2` Release - [3.5.2](#352)
 * `3.5.1` Release - [3.5.1](#351)
@@ -33,6 +34,10 @@
 * `0.78.0` Release - [0.78.00](#07800)
 * `0.77.x` Releases - [0.77.0](#0770)
 
+
+## 3.6.0
+#### Changes 
+* `EMP-21398` feat: Privacy Manifests for SDKs
 
 ## 3.5.3
 #### Changes 

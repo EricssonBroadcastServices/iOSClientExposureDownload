@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientDownload",
         "state": {
           "branch": null,
-          "revision": "b25f6d1ae6b58d6a95d8fc02b90e1dc8ccb32de1",
-          "version": "3.0.300"
+          "revision": "565534233e9818a23817dfcb5a06c7218730c1a6",
+          "version": "3.1.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/EricssonBroadcastServices/iOSClientExposure",
         "state": {
           "branch": null,
-          "revision": "328059bbf7703eeff2f680eba48a2ded8a98b6fb",
-          "version": "3.5.0"
+          "revision": "291d8ed9c87c20588a7a6ac01489a961ea6447e0",
+          "version": "3.8.0"
         }
       },
       {
